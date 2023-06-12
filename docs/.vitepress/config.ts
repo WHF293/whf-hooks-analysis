@@ -12,6 +12,7 @@ import getNavbar from './utils/navbar';
 
 export default defineConfig({
   base: baseUrl,
+  outDir: "../dist",
   title: "霞露小伙-hooks学习",
   lastUpdated: true,
   themeConfig: {

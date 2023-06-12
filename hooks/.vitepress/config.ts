@@ -11,8 +11,7 @@ import getSidebar from './utils/sidebar'
 import getNavbar from './utils/navbar';
 
 export default defineConfig({
-  // base: `.${baseUrl}`,
-  outDir: "../dist",
+  base: `.${baseUrl}`,
   title: "霞露小伙-hooks学习",
   lastUpdated: true,
   themeConfig: {

@@ -27,7 +27,7 @@ export default defineConfig({
       copyright: 'Copyright © 2023-present HfWang'
     },
     editLink: {
-      pattern: 'https://gitee.com/whf293/hooks-analysis/tree/master/hooks/:path',
+      pattern: 'https://github.com/WHF293/whf-hooks-analysis/tree/master/hooks/:path',
       text: '编辑当期页面'
     },
     docFooter: {

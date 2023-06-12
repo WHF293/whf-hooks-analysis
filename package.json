@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "@types/node": "^20.2.5",
+    "flexsearch": "^0.7.31",
+    "sass": "^1.62.1",
+    "vite": "^4.3.9",
+    "vitepress": "1.0.0-beta.1"
+  },
+  "scripts": {
+    "docs:dev": "vitepress dev hooks",
+    "docs:build": "vitepress build hooks",
+    "docs:preview": "vitepress preview hooks"
+  },
+  "dependencies": {
+    "vitepress-plugin-search": "1.0.4-alpha.20"
+  }
+}

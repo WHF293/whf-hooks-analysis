@@ -148,23 +148,15 @@ useEffect 第二个参数：
 
 - 不传
 
-![...](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25b18ee0995e41959dd11bcd0fa03a0e~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
+![..](/react-hooks/1.png)
 
 - 传空数组
-
-![..](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/475430f27f9b4e2ba61da3a4d956f7ec~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
-
 - 数组里为简单数据类型
-
-![...](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c76f1585b0146f9919af08e8a285e5a~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
-
 - 数组里为复杂数据类型
 
 如果 useEffect 的依赖项数组中包含对象，React 会检查对象属性是否发生变化。如果属性的顺序、值或对象本身引用发生变化，则会触发 useEffect。
 
-![...](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f8041330712f4ada9a1ed46b3fe65cd0~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
-
----
+![...](/react-hooks/2.png)
 
 useEffect 中 return 的执行时机：
 

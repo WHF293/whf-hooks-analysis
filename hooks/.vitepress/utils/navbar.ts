@@ -22,8 +22,8 @@ export default function getNavbar(): DefaultTheme.NavItem[] {
 		//   text: 'hooks 入门',
 		//   link: '/react-hooks/'
 		// },
-		// getNavGroup(),
-    ...getNavItem(),
+		getNavGroup(),
+    // ...getNavItem(),
 	];
 
 	return navbar;

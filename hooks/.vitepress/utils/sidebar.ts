@@ -2,8 +2,8 @@
  * @Author: HfWang
  * @Date: 2023-05-29 19:35:47
  * @LastEditors: wanghaofeng
- * @LastEditTime: 2023-06-12 11:33:51
- * @FilePath: \code\hooks-analysis\hooks\.vitepress\utils\sidebar.ts
+ * @LastEditTime: 2023-06-13 10:10:47
+ * @FilePath: \code\whf-hooks-analysis\hooks\.vitepress\utils\sidebar.ts
  */
 import { DefaultTheme } from 'vitepress';
 import { getBaseDocsGroup, getBaseDocsPath, getDirFiles } from './tools';
@@ -41,11 +41,12 @@ const getSidebarItem = (dirPath: string): DefaultTheme.SidebarItem[] => {
 		other: [], // 工具类
 		end: [], // 总结
 	};
-	currentDirFiles.map(item => {
+
+	currentDirFiles.map((item: string) => {
 		const levelTwo = item.includes('.md') ? item.replace('.md', '') : item;
 		if (levelTwo === 'index') {
 			sideItem.unshift({
-				text: '目录',
+				text: docsGroupMap.index,
 				link: `/${levelOne}/${levelTwo}`,
 			});
 		} else if (levelTwo === '总结') {
@@ -87,12 +88,13 @@ const getSidebarItem = (dirPath: string): DefaultTheme.SidebarItem[] => {
 			text: `☂ ${docsGroupMap.other}`,
 			items: easyMiddleHardMap.other,
 		},
+		{
+			text: `☂ ${docsGroupMap.end}`,
+			items: easyMiddleHardMap.end,
+		},
 	] as DefaultTheme.SidebarItem[];
-	sideItem.push(..._sideItem);
 
-	if (easyMiddleHardMap.end[0]) {
-		sideItem.push(easyMiddleHardMap.end[0])
-	}
+	sideItem.push(..._sideItem);
 
 	return sideItem;
 };

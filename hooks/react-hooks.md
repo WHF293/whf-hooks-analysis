@@ -2,9 +2,10 @@
  * @Author: HfWang
  * @Date: 2023-05-31 19:04:18
  * @LastEditors: wanghaofeng
- * @LastEditTime: 2023-06-12 19:45:12
- * @FilePath: \code\hooks-analysis\hooks\react-hooks.md
+ * @LastEditTime: 2023-06-13 19:09:26
+ * @FilePath: \code\whf-hooks-analysis\hooks\react-hooks.md
 -->
+
 # React Hooks 新手入坑指南
 
 ## 前言
@@ -13,7 +14,7 @@
 
 - 想学习自定义 hooks 的源码，首先要知道 react 给我们提供了那些 hooks 的 api 或者说方法， 而本文将介绍一下几个日常开发中比较常用的 hooks
 - 完整的 hooks 文档可以看 [react hooks api 官方文档](https://react.dev/reference/react)
-:::
+  :::
 
 对于常用的 react hooks，我把他们分为 3 类:
 
@@ -26,25 +27,60 @@
 ### useState
 
 ```js
-useState()
+useState();
 ```
 
 ```js
-import { useState } from 'react'
+import { useState } from 'react';
 
 const Demo = () => {
-    const [count, setCount] = useState(0)
-    return (
-        <div>
-            {count}
-            <button onClick={() => setCount(count++)}>count+1</button>
-            <button onClick={() => setCount(e => e+=2)}>count+2</button>
-        </div>
-    )
-}
+	const [count, setCount] = useState(0);
+	return (
+		<div>
+			{count}
+			<button onClick={() => setCount(count++)}>count+1</button>
+			<button onClick={() => setCount(e => (e += 2))}>count+2</button>
+		</div>
+	);
+};
 ```
 
 ### useContext
+
+这个一般是用于跨多层级组件之间的通信的，如葫芦娃爷爷和葫芦娃之间的通信, 一般搭配 createContetx
+
+```tsx
+interface UserData {
+	userId: number;
+	name: string;
+	[key in string]: nay;
+}
+
+const initData: UserData = {};
+const UserCtx = createContext<UserData>(initData);
+
+const Demo = () => {
+	const userData = fetch('xxx'); // 假设异步获取
+
+	return (
+		<UserCtx.UserCtx value={userData}>
+			<Son />
+		</UserCtx.UserCtx>
+	);
+};
+
+const Son = () => (
+	<div>
+		<Grandson />
+	</div>
+);
+
+const Grandson = () => {
+	const userCtx: UserData = useContext(UserCtx);
+
+	return <div>...</div>;
+};
+```
 
 ### useReducer
 
@@ -58,48 +94,54 @@ const Demo = () => {
  * @param {Array} deps
  * @returns {void}
  */
-useEffect(effect, [deps])
+useEffect(effect, [deps]);
 ```
 
 ```jsx
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 const Demo = () => {
-    const [count, setCount] = useState(0)
-    const [num, setNum] = useState(0)
+	const [count, setCount] = useState(0);
+	const [num, setNum] = useState(0);
 
-    useEffect(() => {
-        console.log('无论是自身那个状态发生变化导致的更新或者是祖先组件导致的更新，我这里每次都会触发')
-    })
+	useEffect(() => {
+		console.log(
+			'无论是自身那个状态发生变化导致的更新或者是祖先组件导致的更新，我这里每次都会触发'
+		);
+	});
 
-    useEffect(() => {
-        console.log('我只在组件创建时触发，后续任何情况导致的组件更新，我都不会在执行了')
-    }, [])
+	useEffect(() => {
+		console.log(
+			'我只在组件创建时触发，后续任何情况导致的组件更新，我都不会在执行了'
+		);
+	}, []);
 
-    useEffect(() => {
-        console.log('我只在 count 变量发生变化时才触发')
-    }, [count])
+	useEffect(() => {
+		console.log('我只在 count 变量发生变化时才触发');
+	}, [count]);
 
-    useEffect(() => {
-        return () => {
-            console.log('我在组件卸载时触发')
-        }
-    }, [])
+	useEffect(() => {
+		return () => {
+			console.log('我在组件卸载时触发');
+		};
+	}, []);
 
-    useEffect(() => {
-        return () => {
-            console.log('我在 count 导致的下一次渲染之前执行')
-        }
-    }, [count])
+	useEffect(() => {
+		return () => {
+			console.log('我在 count 导致的下一次渲染之前执行');
+		};
+	}, [count]);
 
-    return (
-        <div>
-            <p>num: {num}  count:{count}</p>
-            <button onClick={() => setCount(count++)}>count</button>
-            <button onClick={() => setNum(num++)}>num</button>
-        </div>
-    )
-}
+	return (
+		<div>
+			<p>
+				num: {num} count:{count}
+			</p>
+			<button onClick={() => setCount(count++)}>count</button>
+			<button onClick={() => setNum(num++)}>num</button>
+		</div>
+	);
+};
 ```
 
 useEffect 第二个参数：
@@ -153,27 +195,28 @@ useLayoutEffect 主要用于模拟 uselaytmeffect 行为，其实现原理是将
 
 比如现在有一个变量 num 从 1 ==> 2, 对于 react 来说就是存在两个时间切片
 
-- 切片1：num = 1
-- 切片2：num = 2
+- 切片 1：num = 1
+- 切片 2：num = 2
 
 而对于一个时间切片来说，它上面包含了一个组件上的所有`数据，包括状态、函数`等
 
 比如下面这个例子
 
 ```js
-let num = 1, a= 0;
-const obj = { a }
-const fn1 = () => num++
-const ffn2 = () => a++
+let num = 1,
+	a = 0;
+const obj = { a };
+const fn1 = () => num++;
+const ffn2 = () => a++;
 ```
 
 对于 react 来说，每次状态发生变化，都会重新生成一个对象，对于上面这个例子了来说就是，num 变化了，react 会生成新的 num、a、obj、fn1、fn2，即
 
-- 切片1： num a obj fn1 fn2
-- 切片2： num a obj fn1 fn2 （全都是新的内存地址，只是变量和函数的名称一致）
+- 切片 1： num a obj fn1 fn2
+- 切片 2： num a obj fn1 fn2 （全都是新的内存地址，只是变量和函数的名称一致）
 
 但是对于 fn2 和 obj 来说，其实它们都不依赖 num，所以我们希望在更新的时候，如果函数或变量本身并不依赖到变化的变量，任然能使用上一切片时间的变量和函数，
-即 obj 和 fn2 在更新的时候任然使用 切片1 的 obj、fn2 对应的内存地址,这样在更新的时候就可以减少一部分的性能开销
+即 obj 和 fn2 在更新的时候任然使用 切片 1 的 obj、fn2 对应的内存地址,这样在更新的时候就可以减少一部分的性能开销
 
 > 这里如果熟悉 vue 的话可以来理解为 vue 里面的 computed
 
@@ -189,23 +232,21 @@ react 的 useMemo 和 useCallback 是通过第二个参数来设置的，同 use
 
 ```js
 const Demo = () => {
-    const a = useRef(0)
-    const fn1 = useCallback(() => console.log(a.current), [])
-    const fn2 = useCallback(() => console.log(a.current), [a])
+	const a = useRef(0);
+	const fn1 = useCallback(() => console.log(a.current), []);
+	const fn2 = useCallback(() => console.log(a.current), [a]);
 
-    return (
-        <div>....</div>
-    )
-}
+	return <div>....</div>;
+};
 ```
 
-如上，假设 a 变成了 1，让后去执行 fn1 和 fn2，这是会发现，fn1 打印的还是 0， 而 fn2 打印的是1，这就是上面说的时间切片导致的，
+如上，假设 a 变成了 1，让后去执行 fn1 和 fn2，这是会发现，fn1 打印的还是 0， 而 fn2 打印的是 1，这就是上面说的时间切片导致的，
 
-- 时间切片1 a = 0  fn1 里面的 a.current = 0,  fn2 里面的 a.current = 0
-- 时间切片2 a = 1  fn1 里面的 a.current = 0,  fn2 里面的 a.current = 1
+- 时间切片 1 a = 0 fn1 里面的 a.current = 0, fn2 里面的 a.current = 0
+- 时间切片 2 a = 1 fn1 里面的 a.current = 0, fn2 里面的 a.current = 1
 
 :::tip
-因为 fn1 的依赖项是空的，即 时间切片2 中的 fn1 指向的内存地址还是时间内切片1 中 fn1 所在的内存地址，所以 fn1 函数里面的 a 一直是第一个时间切片里面的数值，所以执行 fn1 的时候还是打印的 0，而 fn2 依赖性数值包含了 a, 所以在 a 发生变化的时候，在时间切片2 中就会生成一个新的内存地址，函数里面的 a 变量就是时间切片2 里面的 a 变量
+因为 fn1 的依赖项是空的，即 时间切片 2 中的 fn1 指向的内存地址还是时间内切片 1 中 fn1 所在的内存地址，所以 fn1 函数里面的 a 一直是第一个时间切片里面的数值，所以执行 fn1 的时候还是打印的 0，而 fn2 依赖性数值包含了 a, 所以在 a 发生变化的时候，在时间切片 2 中就会生成一个新的内存地址，函数里面的 a 变量就是时间切片 2 里面的 a 变量
 :::
 
 这就是 hooks 经常被提及的会导致 `闭包` 问题
@@ -218,37 +259,41 @@ const Demo = () => {
  * @param {array} deps
  * @returns {any}
  */
-useMemo(fn, deps)
+useMemo(fn, deps);
 ```
 
 ```jsx
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react';
 
 export default function Demo() {
-    const [num1, setNum1] = useState(0)
-    const [num2, setNum2] = useState(0)
-    const [num3, setNum3] = useState(0)
+	const [num1, setNum1] = useState(0);
+	const [num2, setNum2] = useState(0);
+	const [num3, setNum3] = useState(0);
 
-    const memoFn1 = (() => {
-        setNum(num1 => num1++)
-    }, []);
+	const memoFn1 =
+		(() => {
+			setNum(num1 => num1++);
+		},
+		[]);
 
-    const memoFn2 = (() => {
-        setNum(num2 => num2++)
-    }, [num2]);
+	const memoFn2 =
+		(() => {
+			setNum(num2 => num2++);
+		},
+		[num2]);
 
-    const fn3 = () => setNum(num => num++)
+	const fn3 = () => setNum(num => num++);
 
-    return (
-        <div>
-            <p>{num1}</p>
-            <button onCLick={memoFn1}></button>
-            <p>{num2}</p>
-            <button onCLick={memoFn2}></button>
-            <p>{num1}</p>
-            <button onCLick={fn3}></button>
-        </div>
-    )
+	return (
+		<div>
+			<p>{num1}</p>
+			<button onCLick={memoFn1}></button>
+			<p>{num2}</p>
+			<button onCLick={memoFn2}></button>
+			<p>{num1}</p>
+			<button onCLick={fn3}></button>
+		</div>
+	);
 }
 ```
 
@@ -260,16 +305,16 @@ export default function Demo() {
  * @param {array} deps
  * @returns {function}
  */
-useCallback(fn, deps)
+useCallback(fn, deps);
 ```
 
 useCallback 实际上是 useMemo 的延申
 
 ```js
-const fn1 = () => {}
-useCallback(() => fn1(), [xxx])
-等价于
-useMemo(() => () => fn1(), [xxx])
+const fn1 = () => {};
+useCallback(() => fn1(), [xxx]);
+等价于;
+useMemo(() => () => fn1(), [xxx]);
 ```
 
 ### useRef
@@ -279,15 +324,15 @@ useMemo(() => () => fn1(), [xxx])
 > useRef 创建的是一个普通 Javascript 对象，而且会在每次渲染时返回同一个 ref 对象，当我们变化它的 current 属性的时候，对象的引用都是同一个
 
 ```js
-import { useRef } from 'react'
+import { useRef } from 'react';
 
 const Demo = () => {
-    const count = useRef(0)
-    return (
-        <div>
-            {count}
-            <button onClick={() => count.current++}>count+1</button>
-        </div>
-    )
-}
+	const count = useRef(0);
+	return (
+		<div>
+			{count}
+			<button onClick={() => count.current++}>count+1</button>
+		</div>
+	);
+};
 ```

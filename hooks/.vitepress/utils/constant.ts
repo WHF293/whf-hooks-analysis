@@ -7,7 +7,7 @@
  */
 export const baseUrl = '/whf-hooks-analysis/'
 
-export const shouldFilterBaseDirName = ['.vitepress']
+export const shouldFilterBaseDirName = ['.vitepress', 'public']
 
 export const docsGroupMap = {
   index: '新手村',

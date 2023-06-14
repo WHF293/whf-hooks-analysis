@@ -11,8 +11,8 @@ hero:
       text: hooks 入门
       link: /react-hooks
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: mermaid 接入
+      link: /mermaid
 
 features:
   - title: ts + hooks

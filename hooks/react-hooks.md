@@ -31,7 +31,7 @@ useState();
 ```
 
 ```js
-import { useState } from 'react';
+import { useState } from "react";
 
 const Demo = () => {
 	const [count, setCount] = useState(0);
@@ -39,7 +39,7 @@ const Demo = () => {
 		<div>
 			{count}
 			<button onClick={() => setCount(count++)}>count+1</button>
-			<button onClick={() => setCount(e => (e += 2))}>count+2</button>
+			<button onClick={() => setCount((e) => (e += 2))}>count+2</button>
 		</div>
 	);
 };
@@ -60,7 +60,7 @@ const initData: UserData = {};
 const UserCtx = createContext<UserData>(initData);
 
 const Demo = () => {
-	const userData = fetch('xxx'); // 假设异步获取
+	const userData = fetch("xxx"); // 假设异步获取
 
 	return (
 		<UserCtx.UserCtx value={userData}>
@@ -94,44 +94,23 @@ const Grandson = () => {
  * @param {Array} deps
  * @returns {void}
  */
-useEffect(effect, [deps]);
+useEffect(effect, deps);
 ```
 
-```jsx
-import { useEffect, useState } from 'react';
+effect 执行时机
+
+:::code-group
+
+```jsx [deps 不存在]
+import { useEffect, useState } from "react";
 
 const Demo = () => {
 	const [count, setCount] = useState(0);
 	const [num, setNum] = useState(0);
 
 	useEffect(() => {
-		console.log(
-			'无论是自身那个状态发生变化导致的更新或者是祖先组件导致的更新，我这里每次都会触发'
-		);
+		console.log("无论是自身那个状态发生变化导致的更新或者是祖先组件导致的更新，我这里每次都会触发");
 	});
-
-	useEffect(() => {
-		console.log(
-			'我只在组件创建时触发，后续任何情况导致的组件更新，我都不会在执行了'
-		);
-	}, []);
-
-	useEffect(() => {
-		console.log('我只在 count 变量发生变化时才触发');
-	}, [count]);
-
-	useEffect(() => {
-		return () => {
-			console.log('我在组件卸载时触发');
-		};
-	}, []);
-
-	useEffect(() => {
-		return () => {
-			console.log('我在 count 导致的下一次渲染之前执行');
-		};
-	}, [count]);
-
 	return (
 		<div>
 			<p>
@@ -144,27 +123,118 @@ const Demo = () => {
 };
 ```
 
+```jsx [deps 为空数组]
+import { useEffect, useState } from "react";
+
+const Demo = () => {
+	useEffect(() => {
+		console.log("我只在组件创建时触发，后续任何情况导致的组件更新，我都不会在执行了");
+	}, []);
+
+	return (
+		<div>
+			<p>
+				num: {num} count:{count}
+			</p>
+		</div>
+	);
+};
+```
+
+```jsx [deps 有值]
+import { useEffect, useState } from "react";
+
+const Demo = () => {
+	const [count, setCount] = useState(0);
+	const [num, setNum] = useState(0);
+
+	useEffect(() => {
+		console.log("我只在 count 变量发生变化时才触发");
+	}, [count]);
+	return (
+		<div>
+			<p>
+				num: {num} count:{count}
+			</p>
+			<button onClick={() => setCount(count++)}>count</button>
+			<button onClick={() => setNum(num++)}>num</button>
+		</div>
+	);
+};
+```
+
+:::
+
 useEffect 第二个参数：
 
 - 不传
-
-![...](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/25b18ee0995e41959dd11bcd0fa03a0e~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
-
 - 传空数组
-
-![..](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/475430f27f9b4e2ba61da3a4d956f7ec~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
-
 - 数组里为简单数据类型
-
-![...](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3c76f1585b0146f9919af08e8a285e5a~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
-
 - 数组里为复杂数据类型
 
 如果 useEffect 的依赖项数组中包含对象，React 会检查对象属性是否发生变化。如果属性的顺序、值或对象本身引用发生变化，则会触发 useEffect。
 
-![...](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f8041330712f4ada9a1ed46b3fe65cd0~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp?)
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+flowchart LR
+  A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
+  B --> C(更新 render)
+  C --> C1{useEffect 的 deps}
+  C1 --deps 不存在--> END(不执行)
+  C1 --deps 存在--> C2(deps 数组)
+  C2 --空数组--> END(不执行)
+  C2 --数组不为空--> D[/遍历依赖数组/]
+  D --简单数据类型--> E1{直接比较是否发生变化}
+  D --复杂数据类型--> E2(1-判断对象属性数量是否改变 2-对属性值进行浅比较)
+  E1 --变化--> B
+  E1 --没变化--> END
+  E2 --变化--> B
+  E2 --没变化--> END
+```
 
----
+:::code-group
+
+```jsx [deps 有值]
+import { useEffect, useState } from "react";
+
+const Demo = () => {
+	const [count, setCount] = useState(0);
+
+	useEffect(() => {
+		return () => {
+			console.log("我在组件卸载时触发");
+		};
+	}, []);
+	return (
+		<div>
+			<p>count:{count}</p>
+			<button onClick={() => setCount(count++)}>count</button>
+		</div>
+	);
+};
+```
+
+```jsx [deps 有值]
+import { useEffect, useState } from "react";
+
+const Demo = () => {
+	const [count, setCount] = useState(0);
+
+	useEffect(() => {
+		return () => {
+			console.log("我在 count 导致的下一次渲染之前执行");
+		};
+	}, [count]);
+	return (
+		<div>
+			<p>count:{count}</p>
+			<button onClick={() => setCount(count++)}>count</button>
+		</div>
+	);
+};
+```
+
+:::
 
 useEffect 中 return 的执行时机：
 
@@ -263,26 +333,16 @@ useMemo(fn, deps);
 ```
 
 ```jsx
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from "react";
 
 export default function Demo() {
 	const [num1, setNum1] = useState(0);
 	const [num2, setNum2] = useState(0);
 	const [num3, setNum3] = useState(0);
 
-	const memoFn1 =
-		(() => {
-			setNum(num1 => num1++);
-		},
-		[]);
-
-	const memoFn2 =
-		(() => {
-			setNum(num2 => num2++);
-		},
-		[num2]);
-
-	const fn3 = () => setNum(num => num++);
+	const memoFn1 = useMemo(() => setNum((num1) => num1++), []);
+	const memoFn2 = useMemo(() => setNum((num2) => num2++), [num2]);
+	const fn3 = () => setNum((num) => num++);
 
 	return (
 		<div>
@@ -324,7 +384,7 @@ useMemo(() => () => fn1(), [xxx]);
 > useRef 创建的是一个普通 Javascript 对象，而且会在每次渲染时返回同一个 ref 对象，当我们变化它的 current 属性的时候，对象的引用都是同一个
 
 ```js
-import { useRef } from 'react';
+import { useRef } from "react";
 
 const Demo = () => {
 	const count = useRef(0);

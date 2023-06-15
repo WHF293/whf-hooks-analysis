@@ -2,7 +2,7 @@
  * @Author: HfWang
  * @Date: 2023-05-31 19:04:18
  * @LastEditors: wanghaofeng
- * @LastEditTime: 2023-06-13 19:09:26
+ * @LastEditTime: 2023-06-15 09:32:01
  * @FilePath: \code\whf-hooks-analysis\hooks\react-hooks.md
 -->
 
@@ -168,7 +168,24 @@ const Demo = () => {
 useEffect 第二个参数：
 
 - 不传
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+flowchart LR
+	A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
+	C(更新 render) --deps 不存在--> B
+```
+
 - 传空数组
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+flowchart LR
+	A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
+	C(更新 render) --> D(useEffect 的 deps 为空数组)
+	D --> END(effect 不执行)
+```
+
 - 数组里为简单数据类型
 - 数组里为复杂数据类型
 
@@ -179,15 +196,11 @@ useEffect 第二个参数：
 flowchart LR
   A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
   B --> C(更新 render)
-  C --> C1{useEffect 的 deps}
-  C1 --deps 不存在--> END(不执行)
-  C1 --deps 存在--> C2(deps 数组)
-  C2 --空数组--> END(不执行)
-  C2 --数组不为空--> D[/遍历依赖数组/]
+  C --deps 不为空--> D[/遍历依赖数组/]
   D --简单数据类型--> E1{直接比较是否发生变化}
   D --复杂数据类型--> E2(1-判断对象属性数量是否改变 2-对属性值进行浅比较)
   E1 --变化--> B
-  E1 --没变化--> END
+  E1 --没变化--> END（effect 不执行）
   E2 --变化--> B
   E2 --没变化--> END
 ```
@@ -233,23 +246,34 @@ const Demo = () => {
 	);
 };
 ```
-
 :::
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+flowchart LR
+	A(首次 render) --> B(不执行 effect 返回的 clear 函数)
+	C(更新 render) --> D{deps 是否为空}
+	D --为空--> Q
+	D --不为空--> F(比较 deps 是否变化)
+	F --变了--> I1(render 之前，先执行上一次 render 返回的 clear 函数，执行结束后在执行 effect 函数)
+	F --没变--> I2(不执行)
+	I1 --> Q
+	I2 --> Q
+	Q(组件卸载，执行 clear)
+```
+
 
 useEffect 中 return 的执行时机：
 
 - 首次渲染：不会执行 useEffect 里面的 return 函数
 - 组件重新 render，useEffect 执行时，`会先执行 useEffect 里面的 return 函数，后面在执行非 return 部分的代码`
 
-:::tip 引用
-useEffect 使用的图片来源：[React useEffect 两个参数你用对了吗](https://juejin.cn/post/7083308347331444750)
-:::
 
 ### uselayoutEffect
 
 略，基础语法和 useEffect 一模一样，只有执行时机不一致，具体可以看下面的执行时机图：
 
-![useEffect、useLayoutEffect 执行时机示意图](https://pic3.zhimg.com/v2-7ed119532d2632be1a724039998b5892_r.jpg)
+![useEffect、useLayoutEffect 执行时机示意图](/useEffect-render.png)
 
 useLayoutEffect 主要用于模拟 uselaytmeffect 行为，其实现原理是将 useEffect 的依赖项数组中添加 shallowCompare 函数，使得 useEffect 在每次使用浅比较时，都会触发重渲染并执行 useLayoutEffect。
 

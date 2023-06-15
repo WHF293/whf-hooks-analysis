@@ -6,10 +6,15 @@
  * @FilePath: \hooks-analysis\hooks\vite.config.ts
  */
 import { defineConfig } from 'vite';
-import { SearchPlugin } from "vitepress-plugin-search";
+import { SearchPlugin } from 'vitepress-plugin-search';
+import Components from 'unplugin-vue-components/vite';
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 
 export default defineConfig({
-  plugins: [
-    SearchPlugin()
-  ],
-})
+	plugins: [
+		SearchPlugin(),
+		Components({
+			resolvers: [AntDesignVueResolver()],
+		}),
+	],
+});

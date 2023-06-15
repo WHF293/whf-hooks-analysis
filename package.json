@@ -1,21 +1,24 @@
 {
+  "scripts": {
+    "docs:dev": "vitepress dev hooks",
+    "docs:build": "vitepress build hooks",
+    "docs:preview": "vitepress preview hooks"
+  },
   "devDependencies": {
     "@mermaid-js/mermaid-mindmap": "^9.3.0",
     "@types/node": "^20.2.5",
     "flexsearch": "^0.7.31",
     "mermaid": "^9.1.7",
     "sass": "^1.62.1",
+    "unplugin-vue-components": "^0.25.1",
     "vite": "^4.3.9",
     "vitepress": "1.0.0-beta.1",
     "vitepress-plugin-mermaid": "^2.0.10"
   },
-  "scripts": {
-    "docs:dev": "vitepress dev hooks",
-    "docs:build": "vitepress build hooks",
-    "docs:preview": "vitepress preview hooks"
-  },
   "dependencies": {
+    "ant-design-vue": "^3.2.20",
     "markdown-it-mermaid": "^0.2.5",
-    "vitepress-plugin-search": "1.0.4-alpha.20"
+    "vitepress-plugin-search": "1.0.4-alpha.20",
+    "vue": "^3.3.4"
   }
 }

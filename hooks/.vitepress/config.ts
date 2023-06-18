@@ -14,13 +14,16 @@ import { withMermaid } from "vitepress-plugin-mermaid";
 export default withMermaid(
   defineConfig({
     base: baseUrl,
-    title: "霞露小伙-hooks学习",
+    title: "hooks 葵花宝典",
     lastUpdated: true,
+    markdown: {
+      lineNumbers: true,
+    },
     themeConfig: {
       nav: getNavbar(),
       sidebar: getSidebar(),
       socialLinks: [
-        { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+        { icon: 'github', link: 'https://github.com/WHF293/whf-hooks-analysis' }
       ],
       lastUpdatedText: '最后更新时间',
       footer: {

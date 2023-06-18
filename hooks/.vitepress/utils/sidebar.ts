@@ -1,4 +1,3 @@
-import { collection } from 'firebase/firestore';
 /*
  * @Author: HfWang
  * @Date: 2023-05-29 19:35:47
@@ -7,8 +6,8 @@ import { collection } from 'firebase/firestore';
  * @FilePath: \code\whf-hooks-analysis\hooks\.vitepress\utils\sidebar.ts
  */
 import { DefaultTheme } from 'vitepress';
-import { getBaseDocsGroup, getBaseDocsPath, getDirFiles } from './tools';
 import { docsGroupMap } from './constant';
+import { getBaseDocsGroup, getBaseDocsPath, getDirFiles } from './tools';
 
 export default function getSidebar(): DefaultTheme.Sidebar {
   const sidebar: DefaultTheme.Sidebar = {};
@@ -79,22 +78,22 @@ const getSidebarItem = (dirPath: string): DefaultTheme.SidebarItem[] => {
       collapsed: true,
     },
     {
+      text: `🛥️ ${docsGroupMap.other}`,
+      items: easyMiddleHardMap.other,
+      collapsed: true,
+    },
+    {
       text: `🚅 ${docsGroupMap.middle}`,
       items: easyMiddleHardMap.middle,
       collapsed: true,
     },
     {
-      text: `🚀 ${docsGroupMap.hard}`,
+      text: `🛩️ ${docsGroupMap.hard}`,
       items: easyMiddleHardMap.hard,
       collapsed: true,
     },
     {
-      text: `☂ ${docsGroupMap.other}`,
-      items: easyMiddleHardMap.other,
-      collapsed: true,
-    },
-    {
-      text: `☂ ${docsGroupMap.end}`,
+      text: `🚀 ${docsGroupMap.end}`,
       items: easyMiddleHardMap.end,
       collapsed: true,
     },

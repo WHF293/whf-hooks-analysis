@@ -11,17 +11,16 @@
 
 - [useUpdate 文档](https://ahooks.js.org/zh-CN/hooks/use-update)
 
-> 原理：返回的函数通过变更 useState 返回的 state，从而促使组件进行更新。可以简单的把它等效成 componentDidUpdate
+原理：返回的函数通过变更 useState 返回的 state，从而促使组件进行更新。可以简单的把它等效成 componentDidUpdate
 
 ## 源码
 
-```ts
+```ts{5-6}
 import { useCallback, useState } from 'react';
 
 const useUpdate = () => {
   // 不添加依赖性，组件每次更新都会执行 effect
 	const [, setState] = useState({});
-
 	return useCallback(() => setState({}), []);
 };
 
@@ -30,7 +29,7 @@ export default useUpdate;
 
 ### 使用
 
-```jsx
+```jsx{5}
 import React from 'react';
 import { useUpdate } from 'ahooks';
 

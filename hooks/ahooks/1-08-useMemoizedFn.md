@@ -17,7 +17,7 @@
 
 和 useLaster 一样，内部都是使用 useRef 实现的
 
-```ts
+```ts{13,25,27,38-40,42-46}
 import { useMemo, useRef } from 'react';
 import { isFunction } from '../utils';
 import isDev from '../utils/isDev';
@@ -29,12 +29,15 @@ type PickFunction<T extends noop> = (
 	...args: Parameters<T>
 ) => ReturnType<T>;
 
-function useMemoizedFn<T extends noop>(fn: T) {
+function useMemoizedFn<T extends noop>(
+  fn: T
+) {
 	// 处于开发环境时的提示
 	if (isDev) {
 		if (!isFunction(fn)) {
 			console.error(
-				`useMemoizedFn expected parameter is a function, got ${typeof fn}`
+				`useMemoizedFn expected parameter
+        is a function, got ${typeof fn}`
 			);
 		}
 	}
@@ -44,7 +47,13 @@ function useMemoizedFn<T extends noop>(fn: T) {
 	// 这里为什么不直接写 fnRef.current = fn ？
 	// 原因：
 	// https://github.com/alibaba/hooks/issues/728
-	// github 上大佬的解答：兼容 react-devtools，react devtool inspect 组件时会进行 shallow render，并且替换所有 hooks 为 mock hooks, 用来获取 hook 信息。这就会导致在选中时，触发 render，并且因为在 render 中修改 ref，导致 ref.current 被替换成 devtool mock 的空函数（无法触发更新）。但是用 useMemo 包一层，mock useMemo 会始终返回组件正常 render 时的 memorized value，也就不会破坏原有的功能了
+	// github 上大佬的解答：兼容 react-devtools，
+  // react devtool inspect 组件时会进行 shallow render，
+  // 并且替换所有 hooks 为 mock hooks, 用来获取 hook 信息。
+  // 这就会导致在选中时，触发 render，并且因为在 render 中修改 ref，
+  // 导致 ref.current 被替换成 devtool mock 的空函数（无法触发更新）。
+  // 但是用 useMemo 包一层，mock useMemo 会始终返回组件正常 render
+  // 时的 memorized value，也就不会破坏原有的功能了
 	// 好吧。。。。。。大佬们都这么牛的吗
 	fnRef.current = useMemo(() => fn, [fn]);
 

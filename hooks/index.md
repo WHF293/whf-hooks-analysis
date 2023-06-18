@@ -5,11 +5,14 @@ layout: home
 hero:
   # name: "hooks"
   text: "Hooks 葵花宝典"
-  tagline: 大侠练习指南——初入江湖、调入悬崖、学得神功
+  tagline: 大侠练习指南——欲练神功，必先。。。啊，呸呸呸
   actions:
     - theme: brand
-      text: hooks 入门
+      text: react hooks 入门
       link: /react-hooks
+    - theme: alt
+      text: vue-reactive 入门
+      link: /vue-reactive
     - theme: alt
       text: mermaid 接入
       link: /mermaid

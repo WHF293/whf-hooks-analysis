@@ -17,6 +17,8 @@
 
 ```shell
 pnpm add ahooks
+npm i ahooks
+yarn add ahooks
 ```
 
 ## ahooks 项目架构
@@ -25,7 +27,7 @@ pnpm add ahooks
 
 ahooks 采用 pnpm + monorepo 结构组织代码
 
-```shell
+```shell{8-11}
 - hooks
  - .github github 工作流
  - .husky 代码提交规范
@@ -34,7 +36,8 @@ ahooks 采用 pnpm + monorepo 结构组织代码
  - example 本地开发测试时的测试文件
  - public 静态资源
  - packages
-  - hooks 绝大部分自定义 hooks 都在这个目录下(后面介绍的自定义 hooks 都在这个里面)
+  - hooks
+    - src 绝大部分自定义 hooks 都在这个目录下(后面介绍的自定义 hooks 都在这个里面)
   - use-url-state 和路由相关的自定义hooks，单独作为一个项目
  - ...
 ```

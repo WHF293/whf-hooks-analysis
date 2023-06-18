@@ -36,7 +36,7 @@ flowchart LR
 useState();
 ```
 
-```js
+```js{1,4,8-9}
 import { useState } from "react";
 
 const Demo = () => {
@@ -55,12 +55,10 @@ const Demo = () => {
 
 这个一般是用于跨多层级组件之间的通信的，如葫芦娃爷爷和葫芦娃之间的通信, 一般搭配 createContetx
 
-```tsx
-interface UserData {
-	userId: number;
-	name: string;
-	[key in string]: nay;
-}
+:::code-group
+
+```tsx [index.jsx]{1,4,10-12}
+import Son from "./Son";
 
 const initData: UserData = {};
 const UserCtx = createContext<UserData>(initData);
@@ -74,19 +72,25 @@ const Demo = () => {
 		</UserCtx.UserCtx>
 	);
 };
+```
 
+```jsx [Son.jsx]{1,4}
+import Grandson from "./Grandson";
 const Son = () => (
 	<div>
 		<Grandson />
 	</div>
 );
+```
 
+```jsx [Grandson.jsx]{2}
 const Grandson = () => {
 	const userCtx: UserData = useContext(UserCtx);
-
 	return <div>...</div>;
 };
 ```
+
+:::
 
 ## 副作用相关
 
@@ -101,11 +105,11 @@ const Grandson = () => {
 useEffect(effect, deps);
 ```
 
-effect 执行时机
+#### effect 执行时机
 
 :::code-group
 
-```jsx [deps 不存在]
+```jsx [deps 不存在]{7-9}
 import { useEffect, useState } from "react";
 
 const Demo = () => {
@@ -127,7 +131,7 @@ const Demo = () => {
 };
 ```
 
-```jsx [deps 为空数组]
+```jsx [deps 为空数组]{4-6}
 import { useEffect, useState } from "react";
 
 const Demo = () => {
@@ -145,7 +149,7 @@ const Demo = () => {
 };
 ```
 
-```jsx [deps 有值]
+```jsx [deps 有值]{7-9}
 import { useEffect, useState } from "react";
 
 const Demo = () => {
@@ -215,9 +219,15 @@ flowchart TB
 
 如果 useEffect 的依赖项数组中包含对象，React 会检查对象属性是否发生变化。如果属性的顺序、值或对象本身引用发生变化，则会触发 useEffect。
 
+#### effect 中 clear 函数的执行时机
+
+- 首次渲染：不会执行 useEffect 里面的 return 函数
+- 组件重新 render，useEffect 执行时，`会先执行 useEffect 里面的 return 函数，后面在执行非 return 部分的代码`
+
+
 :::code-group
 
-```jsx [deps 为空]
+```jsx [deps 为空]{6-10}
 import { useEffect, useState } from "react";
 
 const Demo = () => {
@@ -237,7 +247,7 @@ const Demo = () => {
 };
 ```
 
-```jsx [deps 有值]
+```jsx [deps 有值]{6-10}
 import { useEffect, useState } from "react";
 
 const Demo = () => {
@@ -259,11 +269,6 @@ const Demo = () => {
 
 :::
 
-useEffect 中 return 的执行时机：
-
-- 首次渲染：不会执行 useEffect 里面的 return 函数
-- 组件重新 render，useEffect 执行时，`会先执行 useEffect 里面的 return 函数，后面在执行非 return 部分的代码`
-
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
 flowchart LR
@@ -272,14 +277,15 @@ flowchart LR
     C(更新 render) --> D{deps 是否为空}
     D --为空--> END(组件卸载\n执行 clear)
     D --不为空--> F{比较 deps 是否变化}
-    F --变了--> W1(render 之前\n先执行上一次 render 返回的 clear 函数\n执行结束后在执行 effect 函数)
+    D --不存在--> W1(render 之前\n先执行上一次 render 返回的 clear 函数\n执行结束后在执行 effect 函数)
+    F --变了--> W1
     F --没变--> W2(不执行)
   end
 ```
 
 ### uselayoutEffect
 
-略，基础语法和 useEffect 一模一样，只有执行时机不一致，具体可以看下面的执行时机图：
+略，基础语法和 useEffect 一模一样，只有 effect 执行时机不一致，具体可以看下面的执行时机图：
 
 ![useEffect、useLayoutEffect 执行时机示意图](/useEffect-render.png)
 
@@ -304,15 +310,14 @@ useLayoutEffect 主要用于模拟 uselaytmeffect 行为，其实现原理是将
 
 比如下面这个例子
 
-```js
-let num = 1,
-	a = 0;
+```js{2,4}
+let num = 1, a = 0;
 const obj = { a };
 const fn1 = () => num++;
 const ffn2 = () => a++;
 ```
 
-对于 react 来说，每次状态发生变化，都会重新生成一个对象，对于上面这个例子了来说就是，num 变化了，react 会生成新的 num、a、obj、fn1、fn2，即
+对于 react 来说，每次状态发生变化，都会重新生成一个对象，对于上面这个例子了来说就是，`num 变化了`，react 会生成新的 num、a、obj、fn1、fn2，即
 
 - 切片 1： num a obj fn1 fn2
 - 切片 2： num a obj fn1 fn2 （全都是新的内存地址，只是变量和函数的名称一致）
@@ -336,8 +341,8 @@ flowchart LR
   end
 ```
 
-但是对于 fn2 和 obj 来说，其实它们都不依赖 num，所以我们希望在更新的时候，如果函数或变量本身并不依赖到变化的变量，任然能使用上一切片时间的变量和函数，
-即 obj 和 fn2 在更新的时候任然使用 切片 1 的 obj、fn2 对应的内存地址,这样在更新的时候就可以减少一部分的性能开销，如图所示
+但是`对于 fn2 和 obj 来说，其实它们都不依赖 num`，所以我们希望在更新的时候，如果函数或变量本身并不依赖到变化的变量，任然能使用上一切片时间的变量和函数，
+即 obj 和 fn2 在更新的时候任然使用 切片 1 的 obj、fn2 对应的内存地址，这样在更新的时候就可以减少一部分的性能开销，如图所示
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
@@ -370,7 +375,7 @@ flowchart LR
 
 react 的 useMemo 和 useCallback 是通过第二个参数来判断的
 
-同 useEffect 一样，会对第二个参数进行比较，如果依赖项的数据发生了变化，就创建新的内存地址，如果第二个参数是空数组的话，即创建之后，之后组件的每一次跟新，被 `useMemo / useCallback` 包装过的变量、函数都不会在发生变化
+> 同 useEffect 一样，会对第二个参数进行比较，如果依赖项的数据发生了变化，就创建新的内存地址，如果第二个参数是空数组的话，即创建之后，之后组件的每一次跟新，被 `useMemo / useCallback` 包装过的变量、函数都不会在发生变化
 
 ```js
 const Demo = () => {
@@ -404,7 +409,7 @@ const Demo = () => {
 useMemo(fn, deps);
 ```
 
-```jsx
+```jsx{8-9}
 import React, { useMemo, useState } from "react";
 
 export default function Demo() {
@@ -442,7 +447,7 @@ useCallback(fn, deps);
 
 useCallback 实际上是 useMemo 的延申
 
-```js
+```js{2,4}
 const fn1 = () => {};
 useCallback(() => fn1(), [xxx]);
 等价于;
@@ -455,7 +460,8 @@ useMemo(() => () => fn1(), [xxx]);
 
 > useRef 创建的是一个普通 Javascript 对象，而且会在每次渲染时返回同一个 ref 对象，当我们变化它的 current 属性的时候，对象的引用都是同一个
 
-```js
+:::code-group
+```js [作为地址不变数据使用]
 import { useRef } from "react";
 
 const Demo = () => {
@@ -468,3 +474,22 @@ const Demo = () => {
 	);
 };
 ```
+
+```jsx [作为绑定dom的元素使用]
+import { useRef } from "react";
+
+const Demo = () => {
+	const divRef = useRef(null);
+	return (
+		<div ref={divRef}>
+		</div>
+	);
+};
+```
+:::
+
+## 总结
+
+大侠，你怎么比我还懒啊。
+
+啊，我懒得写总结，你懒得看内容是吧，要看总结，自己看完内容写去。。。。

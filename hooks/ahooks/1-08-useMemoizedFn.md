@@ -17,7 +17,7 @@
 
 和 useLaster 一样，内部都是使用 useRef 实现的
 
-```ts{13,25,27,38-40,42-46}
+```ts{13,25,27,35-44}
 import { useMemo, useRef } from 'react';
 import { isFunction } from '../utils';
 import isDev from '../utils/isDev';
@@ -42,11 +42,8 @@ function useMemoizedFn<T extends noop>(
 		}
 	}
 
-	const fnRef = useRef<T>(fn);
-
 	// 这里为什么不直接写 fnRef.current = fn ？
-	// 原因：
-	// https://github.com/alibaba/hooks/issues/728
+	// 原因：https://github.com/alibaba/hooks/issues/728
 	// github 上大佬的解答：兼容 react-devtools，
   // react devtool inspect 组件时会进行 shallow render，
   // 并且替换所有 hooks 为 mock hooks, 用来获取 hook 信息。
@@ -55,6 +52,7 @@ function useMemoizedFn<T extends noop>(
   // 但是用 useMemo 包一层，mock useMemo 会始终返回组件正常 render
   // 时的 memorized value，也就不会破坏原有的功能了
 	// 好吧。。。。。。大佬们都这么牛的吗
+	const fnRef = useRef<T>(fn);
 	fnRef.current = useMemo(() => fn, [fn]);
 
 	const memoizedFn = useRef<PickFunction<T>>();

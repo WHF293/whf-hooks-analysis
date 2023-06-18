@@ -10,7 +10,7 @@
 
 > 优雅的使用 addEventListener。
 
-- [useEventListener](https://ahooks.js.org/zh-CN/hooks/use-event-listener)
+- [useEventListener 文档](https://ahooks.js.org/zh-CN/hooks/use-event-listener)
 
 ## 源码
 

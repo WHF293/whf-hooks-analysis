@@ -8,7 +8,7 @@
 
 ## 原码
 
-```ts
+```ts{4,5}
 import { useRef } from 'react';
 
 function useLatest<T>(value: T) {

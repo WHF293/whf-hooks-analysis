@@ -18,9 +18,15 @@
 
 对于常用的 react hooks，我把他们分为 3 类:
 
-- 状态相关
-- 副作用相关
-- 性能优化相关
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+flowchart LR
+  subgraph hooks
+    A(react hooks) --> B(状态相关\n useState,useContext)
+    A --> C(副作用相关\n useEffect, useLayoutEffect)
+    A --> D(性能优化相关\n useCallback, useMemo, useRef)
+  end
+```
 
 ## 状态相关
 
@@ -81,8 +87,6 @@ const Grandson = () => {
 	return <div>...</div>;
 };
 ```
-
-### useReducer
 
 ## 副作用相关
 
@@ -172,8 +176,10 @@ useEffect 第二个参数：
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
 flowchart LR
-	A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
-	C(更新 render) --deps 不存在--> B
+  subgraph 不传
+    A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
+    C(更新 render) --deps 不存在--> B
+  end
 ```
 
 - 传空数组
@@ -181,33 +187,37 @@ flowchart LR
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
 flowchart LR
-	A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
-	C(更新 render) --> D(useEffect 的 deps 为空数组)
-	D --> END(effect 不执行)
+  subgraph 传空数组
+    A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
+    C(更新 render) --> D(useEffect 的 deps 为空数组)
+    D --> END(effect 不执行)
+  end
 ```
 
-- 数组里为简单数据类型
-- 数组里为复杂数据类型
-
-如果 useEffect 的依赖项数组中包含对象，React 会检查对象属性是否发生变化。如果属性的顺序、值或对象本身引用发生变化，则会触发 useEffect。
+- 数组不为空
+  - 数组里为简单数据类型
+  - 数组里为复杂数据类型
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
-flowchart LR
-  A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
-  B --> C(更新 render)
-  C --deps 不为空--> D[/遍历依赖数组/]
-  D --简单数据类型--> E1{直接比较是否发生变化}
-  D --复杂数据类型--> E2(1-判断对象属性数量是否改变 2-对属性值进行浅比较)
-  E1 --变化--> B
-  E1 --没变化--> END（effect 不执行）
-  E2 --变化--> B
-  E2 --没变化--> END
+flowchart TB
+  subgraph 数组不为空
+    A(首次 render) --> B(执行 useEffect 里面的\n effect 函数)
+    C(更新 render) --deps 不为空--> D{遍历依赖数组\n判断遍历项类型}
+    D --简单数据类型--> E1{是否发生变化}
+    D --复杂数据类型--> E2(1-判断对象属性数量是否改变\n 2-对属性值进行浅比较)
+    E1 --变化--> B
+    E1 --没变化--> END(effect 不执行)
+    E2 --变化--> B
+    E2 --没变化--> END
+  end
 ```
+
+如果 useEffect 的依赖项数组中包含对象，React 会检查对象属性是否发生变化。如果属性的顺序、值或对象本身引用发生变化，则会触发 useEffect。
 
 :::code-group
 
-```jsx [deps 有值]
+```jsx [deps 为空]
 import { useEffect, useState } from "react";
 
 const Demo = () => {
@@ -246,28 +256,26 @@ const Demo = () => {
 	);
 };
 ```
+
 :::
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
-flowchart LR
-	A(首次 render) --> B(不执行 effect 返回的 clear 函数)
-	C(更新 render) --> D{deps 是否为空}
-	D --为空--> Q
-	D --不为空--> F(比较 deps 是否变化)
-	F --变了--> I1(render 之前，先执行上一次 render 返回的 clear 函数，执行结束后在执行 effect 函数)
-	F --没变--> I2(不执行)
-	I1 --> Q
-	I2 --> Q
-	Q(组件卸载，执行 clear)
-```
-
 
 useEffect 中 return 的执行时机：
 
 - 首次渲染：不会执行 useEffect 里面的 return 函数
 - 组件重新 render，useEffect 执行时，`会先执行 useEffect 里面的 return 函数，后面在执行非 return 部分的代码`
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+flowchart LR
+  subgraph clear函数
+    A(首次 render) --> B(不执行 effect 返回\n的 clear 函数)
+    C(更新 render) --> D{deps 是否为空}
+    D --为空--> END(组件卸载\n执行 clear)
+    D --不为空--> F{比较 deps 是否变化}
+    F --变了--> W1(render 之前\n先执行上一次 render 返回的 clear 函数\n执行结束后在执行 effect 函数)
+    F --没变--> W2(不执行)
+  end
+```
 
 ### uselayoutEffect
 
@@ -309,8 +317,46 @@ const ffn2 = () => a++;
 - 切片 1： num a obj fn1 fn2
 - 切片 2： num a obj fn1 fn2 （全都是新的内存地址，只是变量和函数的名称一致）
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+flowchart LR
+  subgraph 切片1
+    A(内存地址1) --> a-num(num)
+    A --> a-a(a)
+    A --> a-obj(obj)
+    A --> a-fn1(fn1)
+    A --> a-fn2(fn2)
+  end
+  subgraph 切片2
+    B(内存地址2) --> b-num(num)
+    B --> b-a(a)
+    B --> b-obj(obj)
+    B --> b-fn1(fn1)
+    B --> b-fn2(fn2)
+  end
+```
+
 但是对于 fn2 和 obj 来说，其实它们都不依赖 num，所以我们希望在更新的时候，如果函数或变量本身并不依赖到变化的变量，任然能使用上一切片时间的变量和函数，
-即 obj 和 fn2 在更新的时候任然使用 切片 1 的 obj、fn2 对应的内存地址,这样在更新的时候就可以减少一部分的性能开销
+即 obj 和 fn2 在更新的时候任然使用 切片 1 的 obj、fn2 对应的内存地址,这样在更新的时候就可以减少一部分的性能开销，如图所示
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+flowchart LR
+  subgraph section
+    A(切片1) --> a-a(a)
+    A --> a-fn1(fn1)
+    A --> a-num(num)
+    A --> a-fn2(fn2 地址复用)
+    A --> a-obj(obj 地址复用)
+  end
+  subgraph section
+    B(切片2) --> a-obj
+    B --> a-fn2
+    B --> b-num(num)
+    B --> b-a(a)
+    B --> b-fn1(fn1)
+  end
+```
 
 > 这里如果熟悉 vue 的话可以来理解为 vue 里面的 computed
 
@@ -320,9 +366,11 @@ const ffn2 = () => a++;
 - useMemo
 - useCallback
 
-那什么时候能使用更新前的内存地址呢? 什么是需要创建新的内存地址呢？
+`那什么时候能使用更新前的内存地址呢? 什么是需要创建新的内存地址呢？`
 
-react 的 useMemo 和 useCallback 是通过第二个参数来设置的，同 useEffect 一样，会对第二个参数进行比较，如果依赖项的数据发生了变化，就创建新的内存地址，如果第二个参数是空数组的话，即创建之后，之后组件的每一次跟新，被 useMemo / useCallback 包装过的变量、函数都不会在发生变化
+react 的 useMemo 和 useCallback 是通过第二个参数来判断的
+
+同 useEffect 一样，会对第二个参数进行比较，如果依赖项的数据发生了变化，就创建新的内存地址，如果第二个参数是空数组的话，即创建之后，之后组件的每一次跟新，被 `useMemo / useCallback` 包装过的变量、函数都不会在发生变化
 
 ```js
 const Demo = () => {

@@ -10,18 +10,6 @@ import { getBaseDocsGroup } from './tools';
 
 export default function getNavbar(): DefaultTheme.NavItem[] {
 	const navbar: DefaultTheme.NavItem[] = [
-		// {
-		//   text: "官网链接",
-		//   items: [
-		//     { text: "ahooks", link: "https://ahooks.js.org/zh-CN/" },
-		//     { text: "vueuse", link: "https://vueuse.org/" },
-		//     { text: "react-use", link: "" },
-		//   ],
-		// },
-		// {
-		//   text: 'hooks 入门',
-		//   link: '/react-hooks/'
-		// },
 		getNavGroup(),
     // ...getNavItem(),
 	];
@@ -30,13 +18,13 @@ export default function getNavbar(): DefaultTheme.NavItem[] {
 }
 
 // nav 合并
-const getNavGroup = (): DefaultTheme.NavItem => {
+const getNavGroup = (): DefaultTheme.NavItemChildren => {
 	const baseDocsGroups = getBaseDocsGroup();
 	const obj = {
 		text: 'hooks 学习笔记',
 		items: [],
-	} as DefaultTheme.NavItem;
-	baseDocsGroups.map((groupName: string) => {
+	} as DefaultTheme.NavItemChildren;
+	baseDocsGroups.map(groupName => {
 		obj.items.push({
 			text: groupName,
 			link: `/${groupName}/`,

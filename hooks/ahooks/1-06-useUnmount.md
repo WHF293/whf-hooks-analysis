@@ -15,23 +15,27 @@
 
 ## 源码
 
-```ts
+```ts{7,20-23}
 import { useEffect } from 'react';
 import useLatest from '../useLatest';
 import { isFunction } from '../utils';
 import isDev from '../utils/isDev';
 
-const useUnmount = (fn: () => void) => {
+const useUnmount = (
+  fn: () => void
+) => {
 	// 判断是不是开发环境
 	if (isDev) {
 		// 判断是不是函数
 		if (!isFunction(fn)) {
-			console.error(`useUnmount expected parameter is a function, got ${typeof fn}`);
+			console.error(
+        `useUnmount expected parameter
+        is a function, got ${typeof fn}`
+      );
 		}
 	}
 
 	const fnRef = useLatest(fn);
-
 	useEffect(() => {
 		return () => fnRef.current();
 	}, []);

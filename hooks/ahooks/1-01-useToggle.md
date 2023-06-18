@@ -20,7 +20,7 @@ const [state, { toggle, setLeft, setRight }] = useBoolean(true);
 
 ## 源码
 
-```ts
+```ts{3-8,17-18,24-26,41-44}
 import { useMemo, useState } from 'react';
 
 export interface Actions<T> {
@@ -37,11 +37,11 @@ function useToggle<T, U>(
 	reverseValue: U
 ): [T | U, Actions<T | U>];
 function useToggle<D, R>(
-	defaultValue: D = false as unknown as D,
-	reverseValue?: R
+	defaultValue: D = false as unknown as D, // 默认值
+	reverseValue?: R // 默认值反转后的值
 ) {
 	const [state, setState] = useState<D | R>(defaultValue);
-
+  // 使用 useMemo 对 action 进行缓存
 	const actions = useMemo(() => {
 		// 反转值
 		const reverseValueOrigin = (
@@ -49,7 +49,10 @@ function useToggle<D, R>(
 		) as D | R;
 		// 值反转切换
 		const toggle = () =>
-			setState(s => (s === defaultValue ? reverseValueOrigin : defaultValue));
+			setState(s => (s === defaultValue
+        ? reverseValueOrigin
+        : defaultValue
+      ));
 		// 根据传进来的 value 设置
 		const set = (value: D | R) => setState(value);
 		// 设置为默认值

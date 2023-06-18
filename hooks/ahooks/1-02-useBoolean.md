@@ -22,7 +22,7 @@ const [state, { toggle, setTrue, setFalse }] = useBoolean(true);
 
 ## 源码
 
-```ts
+```ts{2,12,21-24}
 import { useMemo } from "react";
 import useToggle from "../useToggle";
 
@@ -33,9 +33,12 @@ export interface Actions {
   toggle: () => void;
 }
 
-export default function useBoolean(defaultValue = false): [boolean, Actions] {
+export default function useBoolean(
+  defaultValue = false
+): [boolean, Actions] {
+  // 调用 useToggle
   const [state, { toggle, set }] = useToggle(!!defaultValue);
-
+  // 封装 action
   const actions: Actions = useMemo(() => {
     const setTrue = () => set(true);
     const setFalse = () => set(false);
@@ -46,7 +49,7 @@ export default function useBoolean(defaultValue = false): [boolean, Actions] {
       setFalse,
     };
   }, []);
-
+  // 返回状态和改变状态的方法对象
   return [state, actions];
 }
 ```

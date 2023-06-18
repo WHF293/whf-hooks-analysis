@@ -14,7 +14,7 @@
 
 ## 源码
 
-```ts
+```ts{14-15,21-23,27-32}
 import { useEffect, useRef } from 'react';
 import useUnmount from '../useUnmount';
 import isBrowser from '../utils/isBrowser';
@@ -27,9 +27,12 @@ const DEFAULT_OPTIONS: Options = {
 	restoreOnUnmount: false,
 };
 
-function useTitle(title: string, options: Options = DEFAULT_OPTIONS) {
+function useTitle(
+  title: string,
+  options: Options = DEFAULT_OPTIONS
+) {
 	// 如果是浏览器，浏览器标签 title 的默认值就是传进来的值，
-	// 如果是 node 端，则为空F
+	// 如果是 node 端，则为空
 	const titleRef = useRef(isBrowser ? document.title : '');
 	// 闯进来的 title 发生变化就修改标签 title
 	useEffect(() => {

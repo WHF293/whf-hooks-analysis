@@ -18,7 +18,7 @@
 
 ## 源码
 
-```ts
+```ts{4,7-27}
 import { useRef, useCallback } from 'react';
 
 function useLockFn<P extends any[] = any[], V extends any = any>(

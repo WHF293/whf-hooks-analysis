@@ -50,3 +50,7 @@ export default function useBoolean(defaultValue = false): [boolean, Actions] {
   return [state, actions];
 }
 ```
+
+## 使用场景
+
+一般用于开关类场景，例如切换快关显示或隐藏某一组件

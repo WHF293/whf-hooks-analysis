@@ -2,14 +2,18 @@
  * @Author: HfWang
  * @Date: 2023-06-12 09:46:29
  * @LastEditors: wanghaofeng
- * @LastEditTime: 2023-06-12 19:40:06
- * @FilePath: \code\hooks-analysis\hooks\ahooks\1-08-useMemoizedFn.md
+ * @LastEditTime: 2023-06-15 19:41:01
+ * @FilePath: \code\whf-hooks-analysis\hooks\ahooks\1-08-useMemoizedFn.md
 -->
 
 # useMemoizedFn
 
 > - 在某些场景中，我们需要使用 useCallback 来记住一个函数，但是在第二个参数 deps 变化时，会重新生成函数，导致函数地址变化
 > - 使用 useMemoizedFn，可以省略第二个参数 deps，同时保证函数地址永远不会变化。
+
+- [useMemoizedFn 文档](https://ahooks.js.org/zh-CN/hooks/use-memoized-fn)
+
+## 源码
 
 和 useLaster 一样，内部都是使用 useRef 实现的
 
@@ -57,6 +61,8 @@ function useMemoizedFn<T extends noop>(fn: T) {
 
 export default useMemoizedFn;
 ```
+
+## 使用
 
 useMemoizedFn 和 useCallback 都能缓存函数，那他们两的区别是什么？
 

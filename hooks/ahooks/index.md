@@ -2,14 +2,16 @@
  * @Author: HfWang
  * @Date: 2023-05-29 19:35:47
  * @LastEditors: wanghaofeng
- * @LastEditTime: 2023-06-12 20:19:41
- * @FilePath: \code\hooks-analysis\hooks\ahooks\index.md
+ * @LastEditTime: 2023-06-15 19:27:30
+ * @FilePath: \code\whf-hooks-analysis\hooks\ahooks\index.md
 -->
 
 # ahooks
 
 - [hooks 0 基础看这](../react-hooks)
 - [ahooks 官方文档](https://ahooks.js.org/zh-CN/)
+
+> 本系列不会把 ahooks 中的所有 hooks 都分析一边，只会从从中挑选部分和 UI 库无关以及自己平时用的比较多的 hooks 进行分析，如果要学习全部 hooks 的话，建议直接去看项目
 
 ## 安装
 

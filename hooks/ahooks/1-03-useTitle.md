@@ -1,9 +1,9 @@
 <!--
  * @Author: HfWang
  * @Date: 2023-06-05 09:09:11
- * @LastEditors: HfWang
- * @LastEditTime: 2023-06-05 09:29:50
- * @FilePath: \hooks-analysis\hooks\ahooks\03-useTitle.md
+ * @LastEditors: wanghaofeng
+ * @LastEditTime: 2023-06-15 19:25:00
+ * @FilePath: \code\whf-hooks-analysis\hooks\ahooks\1-03-useTitle.md
 -->
 
 # useTitle
@@ -11,6 +11,8 @@
 > 用于设置页面标题
 
 - [useTitle 文档](https://ahooks.js.org/zh-CN/hooks/use-title)
+
+## 源码
 
 ```ts
 import { useEffect, useRef } from 'react';
@@ -46,3 +48,5 @@ function useTitle(title: string, options: Options = DEFAULT_OPTIONS) {
 
 export default useTitle;
 ```
+
+## 使用场景

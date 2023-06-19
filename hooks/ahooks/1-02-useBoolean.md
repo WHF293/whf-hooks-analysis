@@ -20,7 +20,7 @@ useBoolean 是 useToggle 的衍生， 内部就是用的 useToggle 实现的
 const [state, { toggle, setTrue, setFalse }] = useBoolean(true);
 ```
 
-## 源码
+## 武功秘籍
 
 ```ts{2,12,21-24}
 import { useMemo } from "react";

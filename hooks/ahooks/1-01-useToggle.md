@@ -18,7 +18,7 @@
 const [state, { toggle, setLeft, setRight }] = useBoolean(true);
 ```
 
-## 源码
+## 武功秘籍
 
 ```ts{3-8,17-18,24-26,41-44}
 import { useMemo, useState } from 'react';

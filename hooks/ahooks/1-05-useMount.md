@@ -6,7 +6,7 @@
 
 就是简单的利用 useEffect 第二个参数为空数组时，只会在组件挂载时执行 effect 函数的特性 ,相当于 componentWillMount
 
-## 源码
+## 武功秘籍
 
 ```ts{6,17-19}
 import { useEffect } from 'react';

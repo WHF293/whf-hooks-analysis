@@ -13,7 +13,7 @@
 
 - [useMemoizedFn 文档](https://ahooks.js.org/zh-CN/hooks/use-memoized-fn)
 
-## 源码
+## 武功秘籍
 
 和 useLaster 一样，内部都是使用 useRef 实现的
 

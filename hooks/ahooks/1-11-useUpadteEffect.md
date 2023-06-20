@@ -11,7 +11,7 @@
 
 ### useUpdateEffect
 
-```ts{3}
+```ts{4}
 import { useEffect } from 'react';
 import { createUpdateEffect } from '../createUpdateEffect';
 
@@ -20,16 +20,18 @@ export default createUpdateEffect(useEffect);
 
 ### useLayoutUpdateEffect
 
-```ts{3}
+```ts{4}
 import { useLayoutEffect } from 'react';
 import { createUpdateEffect } from '../createUpdateEffect';
 
 export default createUpdateEffect(useLayoutEffect);
 ```
 
-## createUpdateEffect
+从源码可以看出，这两个 hooks 都是使用 createUpdateEffect 创建的
 
-```ts
+### createUpdateEffect
+
+```ts{14-16,20-26}
 import { useRef } from 'react';
 import type { useEffect, useLayoutEffect } from 'react';
 

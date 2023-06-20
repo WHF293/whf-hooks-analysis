@@ -39,7 +39,9 @@ export interface ThrottleOptions {
 }
 
 type noop = (...args: any[]) => any;
+```
 
+```ts{16-37}
 function useThrottleFn<T extends noop>(
 	fn: T, // 需要节流的函数
 	options?: ThrottleOptions // 配置项
@@ -92,7 +94,7 @@ export default useThrottleFn;
 
 源码和节流 hooks 基本一致，就不分析了，直接放源码
 
-```ts{1}
+```ts{1,27-43}
 import debounce from 'lodash/debounce';
 import { useMemo } from 'react';
 import useLatest from '../useLatest';

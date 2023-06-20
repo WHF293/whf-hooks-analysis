@@ -6,7 +6,7 @@
  * @FilePath: \code\hooks-analysis\hooks\ahooks\2-03-useThrottleEffect.md
 -->
 
-# useThrottleEffect +
+# useThrottleEffect + useDebounceEffect
 
 > useThrottleEffect: 为 useEffect 增加节流的能力。
 >
@@ -21,7 +21,7 @@
 
 ### useThrottleEffect
 
-```ts
+```ts{12-26}
 import { useEffect, useState } from 'react';
 import type { DependencyList, EffectCallback } from 'react';
 import type { ThrottleOptions } from '../useThrottle/throttleOptions';
@@ -46,7 +46,8 @@ function useThrottleEffect(
 		return run();
 	}, deps);
 
-	// 组件挂载不会执行 effect 函数，组件跟新时执行 effect 函数（flag 会发生变化的更新）
+	// 组件挂载不会执行 effect 函数，
+  // 组件跟新时执行 effect 函数（flag 会发生变化的更新）
 	useUpdateEffect(effect, [flag]);
 }
 
@@ -57,7 +58,7 @@ export default useThrottleEffect;
 
 同上，不分析
 
-```ts
+```ts{12-22}
 import { useEffect, useState } from 'react';
 import type { DependencyList, EffectCallback } from 'react';
 import type { DebounceOptions } from '../useDebounce/debounceOptions';

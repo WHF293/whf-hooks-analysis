@@ -7,7 +7,9 @@
 
 ## 武功秘籍
 
-```ts
+### useLocalStorageState
+
+```ts{6}
 import { createUseStorageState } from '../createUseStorageState';
 import isBrowser from '../utils/isBrowser';
 
@@ -19,7 +21,9 @@ const useLocalStorageState = createUseStorageState(() =>
 export default useLocalStorageState;
 ```
 
-```ts
+### useSessionStorageState
+
+```ts{6}
 import { createUseStorageState } from '../createUseStorageState';
 import isBrowser from '../utils/isBrowser';
 
@@ -35,11 +39,13 @@ export default useSessionStorageState;
 
 ## createUseStorageState
 
+类型声明和导入
+
 ```ts
-import { useState } from 'react';
-import useMemoizedFn from '../useMemoizedFn'; // 函数缓存
-import useUpdateEffect from '../useUpdateEffect'; // 组件跟新时才执行的 effect
-import { isFunction, isUndef } from '../utils';
+import { useState } from "react";
+import useMemoizedFn from "../useMemoizedFn"; // 函数缓存
+import useUpdateEffect from "../useUpdateEffect"; // 组件跟新时才执行的 effect
+import { isFunction, isUndef } from "../utils";
 
 export interface IFuncUpdater<T> {
 	(previousState?: T): T;
@@ -58,7 +64,11 @@ export interface Options<T> {
 	// 错误回调
 	onError?: (error: unknown) => void;
 }
+```
 
+createUseStorageState
+
+```ts{25-28,33-36,70-81,84}
 export function createUseStorageState(
 	// localStorage 或者 sessionStorage
 	getStorage: () => Storage | undefined
@@ -69,7 +79,7 @@ export function createUseStorageState(
 	) {
 		let storage: Storage | undefined;
 		const {
-			onError = e => {
+			onError = (e) => {
 				console.error(e);
 			},
 		} = options;
@@ -124,7 +134,7 @@ export function createUseStorageState(
 
 		// 更新 state 和 storage 中的数据
 		const updateState = (value?: T | IFuncUpdater<T>) => {
-      // 获取最新的值，判断传入的是不是函数，如果是，执行函数，取函数的返回值
+			// 获取最新的值，判断传入的是不是函数，如果是，执行函数，取函数的返回值
 			const currentState = isFunction(value) ? value(state) : value;
 			setState(currentState);
 

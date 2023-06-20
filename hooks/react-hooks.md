@@ -19,7 +19,7 @@
 对于常用的 react hooks，我把他们分为 3 类:
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#93c5fd'}}}%%
 flowchart LR
   subgraph hooks
     A(react hooks) --> B(状态相关\n useState,useContext)
@@ -178,7 +178,7 @@ useEffect 第二个参数：
 - 不传
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#93c5fd'}}}%%
 flowchart LR
   subgraph 不传
     A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
@@ -189,7 +189,7 @@ flowchart LR
 - 传空数组
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#93c5fd'}}}%%
 flowchart LR
   subgraph 传空数组
     A(首次 render) --> B(执行 useEffect 里面的 effect 函数)
@@ -203,7 +203,7 @@ flowchart LR
   - 数组里为复杂数据类型
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#93c5fd'}}}%%
 flowchart TB
   subgraph 数组不为空
     A(首次 render) --> B(执行 useEffect 里面的\n effect 函数)
@@ -270,7 +270,7 @@ const Demo = () => {
 :::
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#93c5fd'}}}%%
 flowchart LR
   subgraph clear函数
     A(首次 render) --> B(不执行 effect 返回\n的 clear 函数)
@@ -323,7 +323,7 @@ const ffn2 = () => a++;
 - 切片 2： num a obj fn1 fn2 （全都是新的内存地址，只是变量和函数的名称一致）
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#93c5fd'}}}%%
 flowchart LR
   subgraph 切片1
     A(内存地址1) --> a-num(num)
@@ -345,7 +345,7 @@ flowchart LR
 即 obj 和 fn2 在更新的时候任然使用 切片 1 的 obj、fn2 对应的内存地址，这样在更新的时候就可以减少一部分的性能开销，如图所示
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#3b82f6'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#93c5fd'}}}%%
 flowchart LR
   subgraph section
     A(切片1) --> a-a(a)

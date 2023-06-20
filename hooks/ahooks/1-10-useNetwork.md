@@ -6,9 +6,11 @@
 
 ## 武功秘籍
 
+导入和类型声明
+
 ```ts
-import { useEffect, useState } from 'react';
-import { isObject } from '../utils';
+import { useEffect, useState } from "react";
+import { isObject } from "../utils";
 
 export interface NetworkState {
 	since?: Date;
@@ -22,11 +24,15 @@ export interface NetworkState {
 }
 
 enum NetworkEventType {
-	ONLINE = 'online',
-	OFFLINE = 'offline',
-	CHANGE = 'change',
+	ONLINE = "online",
+	OFFLINE = "offline",
+	CHANGE = "change",
 }
+```
 
+### getConnection
+
+```ts
 // 获取网络连接
 function getConnection() {
 	const nav = navigator as any;
@@ -34,7 +40,11 @@ function getConnection() {
 	// 兼容不同浏览器
 	return nav.connection || nav.mozConnection || nav.webkitConnection;
 }
+```
 
+### getConnectionProperty
+
+```ts
 // 获取网络链接信息
 function getConnectionProperty(): NetworkState {
 	const c = getConnection();
@@ -42,21 +52,25 @@ function getConnectionProperty(): NetworkState {
 
 	// https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation
 	return {
-		// 只读属性，返回了当前连接下评估的往返时延（RTT, round-trip time）
+		// 返回了当前连接下评估的往返时延（RTT, round-trip time）
 		rtt: c.rtt,
-		// 只读属性返回 设备用于与网络通信的连接类型, ajax / jsonp / websocket
+		// 设备用于与网络通信的连接类型, ajax / jsonp / websocket
 		type: c.type,
-		// 只读属性， 返回用户已在用户代理上设置了减少数据使用量选项
+		// 返回用户已在用户代理上设置了减少数据使用量选项
 		saveData: c.saveData,
-		// 只读属性，返回以 Mb/s 为单位的有效带宽，并保留该值为 25kb/s 的最接近的整数倍。
+		// 返回以 Mb/s 为单位的有效带宽，并保留该值为 25kb/s 的最接近的整数倍。
 		downlink: c.downlink,
-		// 只读属性 返回最大下行链路速度（以兆比特每秒 （Mbps） 为单位）
+		// 返回最大下行链路速度（以兆比特每秒 （Mbps） 为单位）
 		downlinkMax: c.downlinkMax,
-		// 接口的有效类型只读属性返回连接的有效类型 意思是“慢速 2g”、“2g”、“3g”或“4g”之一
+		// 返回连接的网络类型 “慢速 2g”、“2g”、“3g”或“4g”之一
 		effectiveType: c.effectiveType,
 	};
 }
+```
 
+### useNetwork
+
+```ts{35-41,45-47}
 function useNetwork(): NetworkState {
 	const [state, setState] = useState(() => {
 		return {
@@ -69,7 +83,7 @@ function useNetwork(): NetworkState {
 	useEffect(() => {
 		// 网络连接
 		const onOnline = () => {
-			setState(prevState => ({
+			setState((prevState) => ({
 				...prevState,
 				online: true,
 				since: new Date(),
@@ -77,7 +91,7 @@ function useNetwork(): NetworkState {
 		};
 		// 网络掉线
 		const onOffline = () => {
-			setState(prevState => ({
+			setState((prevState) => ({
 				...prevState,
 				online: false,
 				since: new Date(),
@@ -85,7 +99,7 @@ function useNetwork(): NetworkState {
 		};
 		// 网络状态发生改变
 		const onConnectionChange = () => {
-			setState(prevState => ({
+			setState((prevState) => ({
 				...prevState,
 				...getConnectionProperty(),
 			}));
@@ -103,10 +117,7 @@ function useNetwork(): NetworkState {
 			// 组件卸载，移除上面的监听
 			window.removeEventListener(NetworkEventType.ONLINE, onOnline);
 			window.removeEventListener(NetworkEventType.OFFLINE, onOffline);
-			connection?.removeEventListener(
-				NetworkEventType.CHANGE,
-				onConnectionChange
-			);
+			connection?.removeEventListener(NetworkEventType.CHANGE, onConnectionChange);
 		};
 	}, []);
 

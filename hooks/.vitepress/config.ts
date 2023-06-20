@@ -28,7 +28,7 @@ export default withMermaid(
       lastUpdatedText: '最后更新时间',
       footer: {
         message: 'Released under the MIT License.',
-        copyright: 'Copyright © 2023-present wanghaofeng'
+        copyright: 'Copyright © 2023.06-present wanghaofeng'
       },
       editLink: {
         pattern: 'https://github.com/WHF293/whf-hooks-analysis/tree/master/hooks/:path',

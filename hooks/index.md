@@ -11,11 +11,8 @@ hero:
       text: react hooks 入门
       link: /react-hooks
     - theme: alt
-      text: vue-reactive 入门
-      link: /vue-reactive
-    - theme: alt
-      text: mermaid 接入
-      link: /mermaid
+      text: 霞露小伙
+      link: https://whf293.github.io/hf_blog/
 
 features:
   - title: ts + hooks
@@ -28,4 +25,3 @@ features:
     icon: 🚀
     details: 学习优秀的开源库的代码架构和组织方式
 ---
-

@@ -13,7 +13,7 @@
 
 利用 useEffect 的 effect 函数返回的函数会在组件卸载时执行，相当于 componentWillUnmount
 
-## 源码
+## 武功秘籍
 
 ```ts{7,20-23}
 import { useEffect } from 'react';

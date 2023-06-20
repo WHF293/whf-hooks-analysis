@@ -13,7 +13,7 @@
 
 原理：返回的函数通过变更 useState 返回的 state，从而促使组件进行更新。可以简单的把它等效成 componentDidUpdate
 
-## 源码
+## 武功秘籍
 
 ```ts{5-6}
 import { useCallback, useState } from 'react';

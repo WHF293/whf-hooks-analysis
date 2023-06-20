@@ -16,7 +16,7 @@
 不建议使用这个 hooks，对于接口请求来说，如果使用的时 axios，那么可以使用 axios 的请求拦截进行拦截，或者使用 ahooks 的 useRequest，除了极少部分的场景外，这种防止并发操作的方式还有很多
 :::
 
-## 源码
+## 武功秘籍
 
 ```ts{4,7-27}
 import { useRef, useCallback } from 'react';

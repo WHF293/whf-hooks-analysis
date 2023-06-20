@@ -12,7 +12,7 @@
 
 - [useTitle 文档](https://ahooks.js.org/zh-CN/hooks/use-title)
 
-## 源码
+## 武功秘籍
 
 ```ts{14-15,21-23,27-32}
 import { useEffect, useRef } from 'react';

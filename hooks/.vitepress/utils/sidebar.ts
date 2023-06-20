@@ -71,8 +71,8 @@ const getSidebarItem = (dirPath: string): DefaultTheme.SidebarItem[] => {
 	});
 
 	const getGroupName = (key: GroupKey) =>
-		`${docsGroupMap[key]} * ${easyMiddleHardMap.easy.length}招`;
-    
+		`${docsGroupMap[key]} * ${easyMiddleHardMap[key].length}`;
+
 	const _sideItem = [
 		{
 			text: `🚲 ${getGroupName('easy')}`,

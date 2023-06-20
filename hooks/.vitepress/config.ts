@@ -16,6 +16,7 @@ export default withMermaid(
     base: baseUrl,
     title: "hooks 葵花宝典",
     lastUpdated: true,
+    appearance: 'dark',
     markdown: {
       lineNumbers: true,
     },

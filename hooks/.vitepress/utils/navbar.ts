@@ -10,8 +10,8 @@ import { getBaseDocsGroup } from './tools';
 
 export default function getNavbar(): DefaultTheme.NavItem[] {
 	const navbar: DefaultTheme.NavItem[] = [
-		getNavGroup(),
-    // ...getNavItem(),
+		// getNavGroup(),
+    ...getNavItem(),
 	];
 
 	return navbar;

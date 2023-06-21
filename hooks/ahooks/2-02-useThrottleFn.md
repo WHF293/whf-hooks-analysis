@@ -22,9 +22,8 @@ loadsh、 underscore 等工具库更是已经为我们提供了功能更加完�
 
 ## 武功秘籍
 
-### useThrottleFn
-
-```ts{1}
+:::code-group
+```ts [useThrottleFn]{1}
 import throttle from 'lodash/throttle';
 import { useMemo } from 'react';
 import useLatest from '../useLatest';
@@ -90,11 +89,7 @@ function useThrottleFn<T extends noop>(
 export default useThrottleFn;
 ```
 
-### useDebounceFn
-
-源码和节流 hooks 基本一致，就不分析了，直接放源码
-
-```ts{1,27-43}
+```ts [useDebounceFn]{1,27-43}
 import debounce from 'lodash/debounce';
 import { useMemo } from 'react';
 import useLatest from '../useLatest';
@@ -148,6 +143,9 @@ function useDebounceFn<T extends noop>(fn: T, options?: DebounceOptions) {
 
 export default useDebounceFn;
 ```
+
+:::
+
 
 ## 使用
 

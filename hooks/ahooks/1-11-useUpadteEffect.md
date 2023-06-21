@@ -9,23 +9,23 @@
 
 ## 武功秘籍
 
-### useUpdateEffect
+:::code-group
 
-```ts{4}
+```ts [useUpdateEffect]{4}
 import { useEffect } from 'react';
 import { createUpdateEffect } from '../createUpdateEffect';
 
 export default createUpdateEffect(useEffect);
 ```
 
-### useLayoutUpdateEffect
-
-```ts{4}
+```ts [useLayoutUpdateEffect]{4}
 import { useLayoutEffect } from 'react';
 import { createUpdateEffect } from '../createUpdateEffect';
 
 export default createUpdateEffect(useLayoutEffect);
 ```
+:::
+
 
 从源码可以看出，这两个 hooks 都是使用 createUpdateEffect 创建的
 

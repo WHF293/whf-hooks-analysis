@@ -20,10 +20,10 @@
 	--vp-c-gray-dark-4: #282828;
 	--vp-c-gray-dark-5: #202020;
 
-	--vp-c-divider-light-1: rgba(63, 253, 42, 0.29);
-	--vp-c-divider-light-2: rgba(67, 243, 13, 0.29);
-	--vp-c-divider-dark-1: rgba(7, 133, 13, 0.29);
-	--vp-c-divider-dark-2: rgba(18, 110, 33, 0.29);
+	--vp-c-divider-light-1: rgba(124, 253, 110, 0.29);
+	--vp-c-divider-light-2: rgba(158, 255, 129, 0.29);
+	--vp-c-divider-dark-1: rgba(5, 161, 13, 0.29);
+	--vp-c-divider-dark-2: rgba(19, 133, 38, 0.29);
 
 	--vp-c-text-light-1: var(--vp-c-indigo);
 	--vp-c-text-light-2: rgba(60, 60, 60, 0.7);
@@ -54,8 +54,8 @@
 	--vp-c-green-dimm-2: rgba(15, 97, 108, 0.25);
 	--vp-c-green-dimm-3: rgba(66, 184, 131, 0.05);
 
-	--vp-c-yellow: #ff9317;
-	--vp-c-yellow-light: #fca553;
+	--vp-c-yellow: #fd9a28;
+	--vp-c-yellow-light: #fda959;
 	--vp-c-yellow-lighter: #f8c373;
 	--vp-c-yellow-dark: #e08115;
 	--vp-c-yellow-darker: #ad5b0e;
@@ -136,6 +136,16 @@
 	--vp-c-text-code: var(--vp-c-indigo-lighter);
 }
 
+:root {
+  /* 标题 */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient( 135deg, #cef6ec 10%, #39d9d1 100%);
+  
+  /* 图标背景 */
+  --vp-home-hero-image-background-image: linear-gradient( 135deg, #cef6f4 10%, #4ed7e9 100%);
+  --vp-home-hero-image-filter: blur(150px);
+}
+
 ::-webkit-scrollbar {
 	width: 2px;
 	height: 5px;
@@ -154,7 +164,8 @@ blockquote {
 
 .dark {
 	.custom-block {
-		color: var(--vp-c-green);
+		color: transparent;
+    background: linear-gradient( 135deg, #cef6ec 10%, #39d9d1 100%);
 	}
 }
 
@@ -165,6 +176,7 @@ blockquote {
 }
 
 a {
+  color: var(--vp-c-indigo-lighter) !important;
 	&:hover {
 		color: var(--vp-c-yellow) !important;
 	}

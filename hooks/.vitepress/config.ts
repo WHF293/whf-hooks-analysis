@@ -1,9 +1,9 @@
 /*
  * @Author: HfWang
  * @Date: 2023-05-29 19:35:47
- * @LastEditors: HfWang
- * @LastEditTime: 2023-06-01 09:27:44
- * @FilePath: \hooks-analysis\hooks\.vitepress\config.ts
+ * @LastEditors: wanghaofeng
+ * @LastEditTime: 2023-06-21 13:32:03
+ * @FilePath: \whf-hooks-analysis\hooks\.vitepress\config.ts
  */
 import { baseUrl } from './utils/constant';
 import { defineConfig } from 'vitepress'
@@ -20,6 +20,9 @@ export default withMermaid(
     markdown: {
       lineNumbers: true,
     },
+    head: [
+      ['link', { rel: 'icon',  href: 'https://whf-img.oss-cn-hangzhou.aliyuncs.com/img/h-theme.png' }],
+    ],
     themeConfig: {
       nav: getNavbar(),
       sidebar: getSidebar(),

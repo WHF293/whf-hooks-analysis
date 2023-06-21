@@ -1,9 +1,9 @@
 <!--
  * @Author: HfWang
  * @Date: 2023-06-12 09:54:36
- * @LastEditors: HfWang
- * @LastEditTime: 2023-06-12 09:55:09
- * @FilePath: \code\hooks-analysis\hooks\ahooks\2-03-useThrottleEffect.md
+ * @LastEditors: wanghaofeng
+ * @LastEditTime: 2023-06-21 09:29:56
+ * @FilePath: \whf-hooks-analysis\hooks\ahooks\2-03-useThrottleEffect.md
 -->
 
 # useThrottleEffect + useDebounceEffect
@@ -15,13 +15,12 @@
 - [useThrottleEffect 文档](https://ahooks.js.org/zh-CN/hooks/use-throttle-effect)
 - [useDebounceEffect 文档](https://ahooks.js.org/zh-CN/hooks/use-debounce-effect)
 
-内部实现其实就是使用 useThrottleFn/useDebounceFn 对 useEffect 里面的 effect 函数进行处理
+内部实现其实就是使用 [useThrottleFn/useDebounceFn](./2-02-useThrottleFn) 对 useEffect 里面的 effect 函数进行处理
 
 ## 武功秘籍
 
-### useThrottleEffect
-
-```ts{12-26}
+:::code-group
+```ts [useThrottleEffect]{12-26}
 import { useEffect, useState } from 'react';
 import type { DependencyList, EffectCallback } from 'react';
 import type { ThrottleOptions } from '../useThrottle/throttleOptions';
@@ -54,11 +53,7 @@ function useThrottleEffect(
 export default useThrottleEffect;
 ```
 
-### useDebounceEffect
-
-同上，不分析
-
-```ts{12-22}
+```ts [useDebounceEffect]{12-25}
 import { useEffect, useState } from 'react';
 import type { DependencyList, EffectCallback } from 'react';
 import type { DebounceOptions } from '../useDebounce/debounceOptions';
@@ -70,6 +65,7 @@ function useDebounceEffect(
 	deps?: DependencyList,
 	options?: DebounceOptions
 ) {
+	// 用于 useUpdateEffect 判断是否更新
 	const [flag, setFlag] = useState({});
 
 	const { run } = useDebounceFn(() => {
@@ -77,14 +73,18 @@ function useDebounceEffect(
 	}, options);
 
 	useEffect(() => {
+		// deps 发生变化，执行 防抖函数
 		return run();
 	}, deps);
 
+  // 组件跟新时执行 effect 函数（flag 会发生变化的更新）
 	useUpdateEffect(effect, [flag]);
 }
 
 export default useDebounceEffect;
 ```
+
+:::
 
 ## 使用
 

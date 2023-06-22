@@ -3,15 +3,16 @@
 layout: home
 
 hero:
-  # name: "hooks"
-  text: "Hooks 葵花宝典"
-  tagline: 大侠练习指南——欲练神功，必先。。。啊，呸呸呸
+  name: "hooks 葵花宝典"
+  image: "/logo.png"
+  text: "大侠练习指南——欲练神功，必先。。。啊，呸呸呸"
+  # tagline:
   actions:
     - theme: brand
       text: react hooks 入门
       link: /react-hooks
     - theme: alt
-      text: 霞露小伙
+      text: 霞露小伙主站
       link: https://whf293.github.io/hf_blog/
 
 features:

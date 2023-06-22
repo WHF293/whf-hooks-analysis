@@ -24,6 +24,7 @@ export default withMermaid(
       ['link', { rel: 'icon',  href: 'https://whf-img.oss-cn-hangzhou.aliyuncs.com/img/h-theme.png' }],
     ],
     themeConfig: {
+      logo: '/logo.png',
       nav: getNavbar(),
       sidebar: getSidebar(),
       socialLinks: [

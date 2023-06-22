@@ -22,14 +22,16 @@ loadsh、 underscore 等工具库更是已经为我们提供了功能更加完�
 
 ## 武功秘籍
 
+引入和类型声明
+
 :::code-group
-```ts [useThrottleFn]{1}
-import throttle from 'lodash/throttle';
-import { useMemo } from 'react';
-import useLatest from '../useLatest';
-import useUnmount from '../useUnmount';
-import { isFunction } from '../utils';
-import isDev from '../utils/isDev';
+```ts [useThrottleFn]{1,8-12}
+import throttle from "lodash/throttle";
+import { useMemo } from "react";
+import useLatest from "../useLatest";
+import useUnmount from "../useUnmount";
+import { isFunction } from "../utils";
+import isDev from "../utils/isDev";
 
 export interface ThrottleOptions {
 	wait?: number;
@@ -40,7 +42,30 @@ export interface ThrottleOptions {
 type noop = (...args: any[]) => any;
 ```
 
-```ts{16-37}
+```ts [useDebounceFn]{1,8-13}
+import debounce from "lodash/debounce";
+import { useMemo } from "react";
+import useLatest from "../useLatest";
+import useUnmount from "../useUnmount";
+import { isFunction } from "../utils";
+import isDev from "../utils/isDev";
+
+export interface DebounceOptions {
+	wait?: number;
+	leading?: boolean;
+	trailing?: boolean;
+	maxWait?: number;
+}
+
+type noop = (...args: any[]) => any;
+```
+:::
+
+具体实现
+
+:::code-group
+
+```ts [useThrottleFn]{16-37}
 function useThrottleFn<T extends noop>(
 	fn: T, // 需要节流的函数
 	options?: ThrottleOptions // 配置项
@@ -90,22 +115,6 @@ export default useThrottleFn;
 ```
 
 ```ts [useDebounceFn]{1,27-43}
-import debounce from 'lodash/debounce';
-import { useMemo } from 'react';
-import useLatest from '../useLatest';
-import useUnmount from '../useUnmount';
-import { isFunction } from '../utils';
-import isDev from '../utils/isDev';
-
-export interface DebounceOptions {
-  wait?: number;
-  leading?: boolean;
-  trailing?: boolean;
-  maxWait?: number;
-}
-
-type noop = (...args: any[]) => any;
-
 function useDebounceFn<T extends noop>(fn: T, options?: DebounceOptions) {
 	if (isDev) {
 		if (!isFunction(fn)) {
@@ -145,7 +154,6 @@ export default useDebounceFn;
 ```
 
 :::
-
 
 ## 使用
 

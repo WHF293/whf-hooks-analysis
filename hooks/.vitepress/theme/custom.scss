@@ -3,7 +3,7 @@
 	--vp-c-white-soft: #f9f9f9;
 	--vp-c-white-mute: #f1f1f1;
 
-	--vp-c-black: #2d333f;
+	--vp-c-black: #343a46;
 	--vp-c-black-pure: #000000;
 	--vp-c-black-soft: #343a46;
 	--vp-c-black-mute: #2f2f2f;
@@ -137,13 +137,13 @@
 }
 
 :root {
-  /* 标题 */
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient( 135deg, #cef6ec 10%, #39d9d1 100%);
-  
-  /* 图标背景 */
-  --vp-home-hero-image-background-image: linear-gradient( 135deg, #cef6f4 10%, #4ed7e9 100%);
-  --vp-home-hero-image-filter: blur(150px);
+	//   /* 标题 */
+	--vp-home-hero-name-color: transparent;
+	--vp-home-hero-name-background: linear-gradient(135deg, #cef6ec 10%, #39d9d1 100%);
+
+	//   /* 图标背景 */
+	--vp-home-hero-image-background-image: linear-gradient(135deg, #39d9d1 10%, #5d91f3 100%);
+	--vp-home-hero-image-filter: blur(150px);
 }
 
 ::-webkit-scrollbar {
@@ -152,7 +152,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: var(--vp-c-green);
+	background-color: var(--vp-c-text-3);
 	border-radius: 4px;
 	cursor: pointer;
 }
@@ -164,19 +164,17 @@ blockquote {
 
 .dark {
 	.custom-block {
-		color: transparent;
-    background: linear-gradient( 135deg, #cef6ec 10%, #39d9d1 100%);
+		color: var(--vp-c-green);
 	}
 }
 
 .VPHomeHero {
 	.text {
-		color: var(--vp-home-hero-name-color);
+		font-size: 24px;
 	}
 }
 
 a {
-  color: var(--vp-c-indigo-lighter) !important;
 	&:hover {
 		color: var(--vp-c-yellow) !important;
 	}

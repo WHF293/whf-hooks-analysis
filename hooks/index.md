@@ -3,10 +3,10 @@
 layout: home
 
 hero:
-  # name: "hooks"
-  logo: "/logo.png"
-  text: "Hooks 葵花宝典"
-  tagline: 大侠练习指南——欲练神功，必先。。。啊，呸呸呸
+  name: "hooks 葵花宝典"
+  image: "/logo.png"
+  text: "大侠练习指南——欲练神功，必先。。。啊，呸呸呸"
+  # tagline:
   actions:
     - theme: brand
       text: react hooks 入门

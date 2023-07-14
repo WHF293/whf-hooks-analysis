@@ -5,7 +5,7 @@
  * @LastEditTime: 2023-06-21 13:32:03
  * @FilePath: \whf-hooks-analysis\hooks\.vitepress\config.ts
  */
-import { baseUrl } from './utils/constant';
+import { baseUrl, githubLink, webSiteLogo, editLink } from './utils/constant';
 import { defineConfig } from 'vitepress'
 import getSidebar from './utils/sidebar'
 import getNavbar from './utils/navbar';
@@ -21,14 +21,14 @@ export default withMermaid(
       lineNumbers: true,
     },
     head: [
-      ['link', { rel: 'icon',  href: 'https://whf-img.oss-cn-hangzhou.aliyuncs.com/img/h-theme.png' }],
+      ['link', { rel: 'icon', href: webSiteLogo }],
     ],
     themeConfig: {
       logo: '/logo.png',
       nav: getNavbar(),
       sidebar: getSidebar(),
       socialLinks: [
-        { icon: 'github', link: 'https://github.com/WHF293/whf-hooks-analysis' }
+        { icon: 'github', link: githubLink }
       ],
       lastUpdatedText: '最后更新时间',
       footer: {
@@ -36,7 +36,7 @@ export default withMermaid(
         copyright: 'Copyright © 2023.06-present wanghaofeng'
       },
       editLink: {
-        pattern: 'https://github.com/WHF293/whf-hooks-analysis/tree/master/hooks/:path',
+        pattern: editLink,
         text: '编辑当期页面'
       },
       docFooter: {
@@ -44,8 +44,9 @@ export default withMermaid(
         next: '下一篇 >'
       },
       outline: {
-        level: 'deep'
-      }
+        level: 'deep',
+        label: '秘籍指南'
+      },
     }
   })
 )

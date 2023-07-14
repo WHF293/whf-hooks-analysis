@@ -7,5 +7,9 @@
  */
 import DefaultTheme from 'vitepress/theme'
 import './custom.scss'
+import MyLayout from './MyLayout.vue'
 
-export default DefaultTheme
+export default {
+  ...DefaultTheme,
+  Layout: MyLayout
+}

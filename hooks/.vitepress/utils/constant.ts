@@ -17,3 +17,9 @@ export const docsGroupMap = {
   other: '副本刷怪',
   end: '习得神功'
 }
+
+export const showDetailGroupList = ['ahooks', 'react-use', 'vueuse']
+
+export const webSiteLogo = 'https://whf-img.oss-cn-hangzhou.aliyuncs.com/img/h-theme.png'
+export const githubLink = 'https://github.com/WHF293/whf-hooks-analysis'
+export const editLink = 'https://github.com/WHF293/whf-hooks-analysis/tree/master/hooks/:path'

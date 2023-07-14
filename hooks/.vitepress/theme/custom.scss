@@ -142,7 +142,7 @@
 	--vp-home-hero-name-background: linear-gradient(135deg, #cef6ec 10%, #39d9d1 100%);
 
 	//   /* 图标背景 */
-	--vp-home-hero-image-background-image: linear-gradient(135deg, #39d9d1 10%, #5d91f3 100%);
+	--vp-home-hero-image-background-image: linear-gradient(135deg, #39d9d1 30%, #5d91f3 50%, rgb(161, 103, 255) 70%);
 	--vp-home-hero-image-filter: blur(150px);
 }
 
@@ -189,5 +189,12 @@ a {
 	}
 	h3 {
 		color: var(--vp-c-yellow-lighter);
+	}
+}
+
+@media (min-width: 1440px) {
+	.VPSidebar {
+    min-width: 200px !important;
+		width: calc((100% - (var(--vp-layout-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px);
 	}
 }

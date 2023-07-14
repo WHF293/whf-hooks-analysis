@@ -14,7 +14,7 @@
 
 ## 武功秘籍
 
-```ts
+```ts{16-20 }
 import type { DependencyList } from 'react';
 import { useRef } from 'react';
 import depsAreSame from '../utils/depsAreSame';

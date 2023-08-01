@@ -1,8 +1,8 @@
 <!--
  * @Author: HfWang
  * @Date: 2023-05-31 19:04:18
- * @LastEditors: wanghaofeng
- * @LastEditTime: 2023-06-15 09:32:01
+ * @LastEditors: wanghaofeng 2860028714@qq.com
+ * @LastEditTime: 2023-08-01 08:20:32
  * @FilePath: \code\whf-hooks-analysis\hooks\react-hooks.md
 -->
 
@@ -58,13 +58,13 @@ const Demo = () => {
 :::code-group
 
 ```tsx [index.jsx]{1,4,10-12}
-import Son from "./Son";
+import Son from './Son';
 
 const initData: UserData = {};
 const UserCtx = createContext<UserData>(initData);
 
 const Demo = () => {
-	const userData = fetch("xxx"); // 假设异步获取
+	const userData = fetch('xxx'); // 假设异步获取
 
 	return (
 		<UserCtx.UserCtx value={userData}>
@@ -75,7 +75,7 @@ const Demo = () => {
 ```
 
 ```jsx [Son.jsx]{1,4}
-import Grandson from "./Grandson";
+import Grandson from './Grandson';
 const Son = () => (
 	<div>
 		<Grandson />
@@ -110,14 +110,14 @@ useEffect(effect, deps);
 :::code-group
 
 ```jsx [deps 不存在]{7-9}
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const Demo = () => {
 	const [count, setCount] = useState(0);
 	const [num, setNum] = useState(0);
 
 	useEffect(() => {
-		console.log("无论是自身那个状态发生变化导致的更新或者是祖先组件导致的更新，我这里每次都会触发");
+		console.log('无论是自身那个状态发生变化导致的更新或者是祖先组件导致的更新，我这里每次都会触发');
 	});
 	return (
 		<div>
@@ -132,11 +132,11 @@ const Demo = () => {
 ```
 
 ```jsx [deps 为空数组]{4-6}
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const Demo = () => {
 	useEffect(() => {
-		console.log("我只在组件创建时触发，后续任何情况导致的组件更新，我都不会在执行了");
+		console.log('我只在组件创建时触发，后续任何情况导致的组件更新，我都不会在执行了');
 	}, []);
 
 	return (
@@ -150,14 +150,14 @@ const Demo = () => {
 ```
 
 ```jsx [deps 有值]{7-9}
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const Demo = () => {
 	const [count, setCount] = useState(0);
 	const [num, setNum] = useState(0);
 
 	useEffect(() => {
-		console.log("我只在 count 变量发生变化时才触发");
+		console.log('我只在 count 变量发生变化时才触发');
 	}, [count]);
 	return (
 		<div>
@@ -224,18 +224,17 @@ flowchart TB
 - 首次渲染：不会执行 useEffect 里面的 return 函数
 - 组件重新 render，useEffect 执行时，`会先执行 useEffect 里面的 return 函数，后面在执行非 return 部分的代码`
 
-
 :::code-group
 
 ```jsx [deps 为空]{6-10}
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const Demo = () => {
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
 		return () => {
-			console.log("我在组件卸载时触发");
+			console.log('我在组件卸载时触发');
 		};
 	}, []);
 	return (
@@ -248,14 +247,14 @@ const Demo = () => {
 ```
 
 ```jsx [deps 有值]{6-10}
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const Demo = () => {
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
 		return () => {
-			console.log("我在 count 导致的下一次渲染之前执行");
+			console.log('我在 count 导致的下一次渲染之前执行');
 		};
 	}, [count]);
 	return (
@@ -461,8 +460,9 @@ useMemo(() => () => fn1(), [xxx]);
 > useRef 创建的是一个普通 Javascript 对象，而且会在每次渲染时返回同一个 ref 对象，当我们变化它的 current 属性的时候，对象的引用都是同一个
 
 :::code-group
+
 ```js [作为地址不变数据使用]
-import { useRef } from "react";
+import { useRef } from 'react';
 
 const Demo = () => {
 	const count = useRef(0);
@@ -476,17 +476,341 @@ const Demo = () => {
 ```
 
 ```jsx [作为绑定dom的元素使用]
-import { useRef } from "react";
+import { useRef } from 'react';
 
 const Demo = () => {
 	const divRef = useRef(null);
-	return (
-		<div ref={divRef}>
-		</div>
-	);
+	return <div ref={divRef}></div>;
 };
 ```
+
 :::
+
+## 自定义 hooks
+
+### 组件挂载和组件卸载
+
+```js
+import { useEffect, useRef } from 'react';
+
+export function useMount(fn) {
+	useEffect(() => {
+		fn?.();
+	}, []);
+}
+
+export function useUnmount(fn) {
+	const fnRef = useRef(fn);
+	useEffect(() => () => fnRef.current?.(), []);
+}
+```
+
+### 组件更新
+
+```js
+import { useEffect, useRef } from 'react';
+
+export function useUpdateEffect(fn, deps) {
+	const isMount = useFisrtMount();
+	useEffect(() => {
+		if (!isMount.current) {
+			fn?.();
+		}
+	}, deps);
+}
+
+export function useFisrtMount() {
+	const isMount = useRef(true);
+
+	useEffect(() => {
+		return () => (isMount.current = false);
+	});
+
+	return isMount;
+}
+```
+
+### 类组件写法扩展
+
+```js
+export function useSetState(initData) {
+	const [store, setStore] = useState(initData);
+
+	const setStoreState = value => {
+		setStore({
+			...store,
+			...value,
+		});
+	};
+
+	return [store, setStoreState];
+}
+```
+
+### 监听事件
+
+```js
+export function useEvent({ dom, callback, eventName }, deps = []) {
+	const target = getDom(dom);
+	useEffect(() => {
+		target?.addEventListener?.(eventName, callback);
+		return () => target?.removeEventListener?.(eventName, callback);
+	}, deps);
+}
+
+export function getDom(el) {
+	if (typeof el === 'string') {
+		return document.querySelector(el);
+	} else if (typeof el === 'object' && el.hasOwnProperty('current')) {
+		return el.current;
+	} else {
+		return el;
+	}
+}
+```
+
+### 请求策略
+
+:::code-group
+
+```jsx [基础版本] {7-11,32-35}
+export function useRequest(http, options) {
+	const config = {
+		manual: false, // 是否手动执行
+		...options,
+	};
+
+	useMount(() => {
+		if (!config.manual) {
+			run();
+		}
+	});
+
+	const [loading, setLoading] = useState(false);
+	const [data, setData] = useState(null);
+	const [error, setError] = useState(null);
+
+	const run = async () => {
+		setLoading(true);
+		try {
+			const res = await http();
+			setData(res);
+			setLoading(false);
+			setError(null);
+		} catch (err) {
+			setData(null);
+			setError(err);
+			setLoading(false);
+		}
+	};
+
+	return {
+		run,
+		data,
+		error,
+		loading,
+	};
+}
+```
+
+```jsx [新增自定义回调] {4-6,22,29,34}
+export function useRequest(http, options) {
+	const config = {
+		manual: false,
+		beforeRequest: null,
+		onSuccess: null,
+		onError: null,
+		...options,
+	};
+
+	useMount(() => {
+		if (!config.manual) {
+			run();
+		}
+	});
+
+	const [loading, setLoading] = useState(false);
+	const [data, setData] = useState(null);
+	const [error, setError] = useState(null);
+
+	const run = async () => {
+		const { beforeRequest, onError, onSuccess } = config;
+		beforeRequest?.();
+		setLoading(true);
+		try {
+			const res = await http();
+			setData(res);
+			setLoading(false);
+			setError(null);
+			onSuccess?.(res);
+		} catch (err) {
+			setData(null);
+			setError(err);
+			setLoading(false);
+			onError?.(err);
+		}
+	};
+
+	return {
+		run,
+		data,
+		error,
+		loading,
+	};
+}
+```
+
+```jsx [新增缓存] {1,9,27-32,48,55}
+const cacheMap = new Map();
+
+export function useRequest_2(http, options) {
+	const config = {
+		manual: false,
+		beforeRequest: null,
+		onSuccess: null,
+		onError: null,
+		cacheKey: null, // 缓存 key
+		...options,
+	};
+
+	useMount(() => {
+		if (!config.manual) {
+			run();
+		}
+	});
+
+	const [loading, setLoading] = useState(false);
+	const [data, setData] = useState(null);
+	const [error, setError] = useState(null);
+
+	const run = async () => {
+		const { beforeRequest, onError, onSuccess, cacheKey } = config;
+		beforeRequest?.();
+		setLoading(true);
+		if (cacheKey && cacheMap.has(cacheKey)) {
+			setData(cacheMap.get(cacheKey));
+			setLoading(false);
+			setError(null);
+			onSuccess?.(res);
+		} else {
+			try {
+				const res = await http();
+				setData(res);
+				setLoading(false);
+				setError(null);
+				onSuccess?.(res);
+				if (cacheKey) {
+					cacheMap.set(cacheKey, res);
+				}
+			} catch (err) {
+				setData(null);
+				setError(err);
+				setLoading(false);
+				onError?.(err);
+			}
+		}
+	};
+
+	const clearCache = () => cacheMap.delete(cacheKey);
+
+	return {
+		run,
+		data,
+		error,
+		loading,
+		clearCache,
+	};
+}
+```
+
+```js [新增缓存有效期] {10,28-37,64-70}
+const cacheMap = new Map();
+
+export function useRequest_2(http, options) {
+	const config = {
+		manual: false,
+		beforeRequest: null,
+		onSuccess: null,
+		onError: null,
+		cacheKey: null,
+		period: null, // 有效期时长， number，单位毫秒
+		...options,
+	};
+
+	useMount(() => {
+		if (!config.manual) {
+			run();
+		}
+	});
+
+	const [loading, setLoading] = useState(false);
+	const [data, setData] = useState(null);
+	const [error, setError] = useState(null);
+
+	const run = async () => {
+		const { beforeRequest, onError, onSuccess, cacheKey } = config;
+		beforeRequest?.();
+		setLoading(true);
+		if (cacheKey && cacheMap.has(cacheKey)) {
+			const res = cacheMap.get(cacheKey);
+			if (cacheDataInPeriod()) {
+				setData(res.value);
+				setLoading(false);
+				setError(null);
+				onSuccess?.(res);
+			} else {
+				runAsync();
+			}
+		} else {
+			runAsync();
+		}
+	};
+
+	const runAsync = async () => {
+		try {
+			const res = await http();
+			setData(res);
+			setLoading(false);
+			setError(null);
+			onSuccess?.(res);
+			if (cacheKey) {
+				cacheMap.set(cacheKey, {
+					value: res,
+					time: Date.now(),
+				});
+			}
+		} catch (err) {
+			setData(null);
+			setError(err);
+			setLoading(false);
+			onError?.(err);
+		}
+	};
+
+	const cacheDataInPeriod = () => {
+		const { period } = config;
+		return period
+			? // 有传入缓存有效期的话就判断一下
+			  Date.now() - cacheMap.get(cacheKey).time < period
+			: true; // 没有执行返回 true
+	};
+
+	const clearCache = () => cacheMap.delete(cacheKey);
+
+	return {
+		run,
+		data,
+		error,
+		loading,
+		clearCache,
+	};
+}
+```
+
+```js [插件式开发]
+
+plugins.forEach(plugin => plugin?.[action]?.(...))
+```
 
 ## 总结
 

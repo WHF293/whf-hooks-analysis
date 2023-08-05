@@ -2,7 +2,7 @@
  * @Author: HfWang
  * @Date: 2023-05-31 19:04:18
  * @LastEditors: wanghaofeng 2860028714@qq.com
- * @LastEditTime: 2023-08-01 08:20:32
+ * @LastEditTime: 2023-08-05 10:47:08
  * @FilePath: \code\whf-hooks-analysis\hooks\react-hooks.md
 -->
 
@@ -14,7 +14,407 @@
 
 - 想学习自定义 hooks 的源码，首先要知道 react 给我们提供了那些 hooks 的 api 或者说方法， 而本文将介绍一下几个日常开发中比较常用的 hooks
 - 完整的 hooks 文档可以看 [react hooks api 官方文档](https://react.dev/reference/react)
-  :::
+:::
+
+:::warning 为什么要学 hooks ？
+
+- 文心一言：
+  Hooks 是 React 16.8 版本中引入的新特性，它允许你在函数组件中使用 state 和其他 React 特性，
+	使得函数组件更加灵活和易于理解。Hooks 的设计动机是为了解决函数组件在处理逻辑和状态时的限制，
+	它通过将某些特定逻辑封装成小的、可复用的函数，使得函数组件可以像类组件一样使用 state 和其他 React 特性。
+
+	`Hooks的实现基于JavaScript的闭包和原型链`，通过将这些hook函数添加到组件的原型链中，
+	并在每次渲染时创建新的作用域和memorizedState属性，使得函数组件可以像类组件一样使用state和其他React特性。
+
+	`Hooks的最大好处是简化了逻辑复用，`它使得函数组件的逻辑更加模块化和可复用，提高了代码的可读性和可维护性。
+:::
+
+### 案例一：逻辑复用
+
+#### class Demo
+
+:::code-group
+
+```js [Demo1]
+// 控制弹窗是否显示
+class Demo1 extends Component {
+	constructor(props) {
+		super();
+		this.state = {
+			showModal,
+		};
+	}
+	openModal = () => {
+		this.setState({
+			showModal: true,
+		});
+	};
+	closeModal = () => {
+		this.setState({
+			showModal: false,
+		});
+	};
+	// ....
+	render() {
+		return (
+			<>
+				<button onClick={this.openModal}></button>
+				<Modal
+					visiable={this.state.showModal}
+					closeModal={this.closeModal}></Modal>
+			</>
+		);
+	}
+}
+
+```
+
+```js [Demo2]
+// 控制文案内容
+class Demo2 extends Component {
+	constructor(props) {
+		super();
+		this.state = {
+			show,
+		};
+	}
+	toggleItem = () => {
+		this.setState({
+			show: !show,
+		});
+	};
+	// ....
+	render() {
+		return (
+			<>
+				<button onClick={this.openModal}></button>
+				<div>{this.state.show ? 'show' : 'hide'}</div>
+			</>
+		);
+	}
+}
+```
+
+:::
+
+如上面代码所示，我们有两个组件，第一个组件通过一个按钮控制弹窗的出现，第二个组件通过按钮控制文案的显示
+
+仔细观察我们可以发现，这两个我们开发过程中经常遇到的场景，实际上他们都有一个公共的逻辑——`就是通过一个变量的状态来修改视图`
+
+在类组件时代，对于这部分逻辑实际上我们是不好把它提取为公共逻辑的：
+
+- HOC：不太好处理，如果组件中只有一个变量用于控制状态还好，但是如果一个组件中存在多个类似的场景的话就不行了
+- 把处理逻辑提取到组件之外：不符合 react 整个框架的设计思路 UI = f (data) （data →  state、props）
+
+但是对于 hooks 来说，这个逻辑就很容易提取，我们把上面的公共逻辑提取为一个自定义 hooks
+
+#### useBoolean
+
+```ts
+interface Actions<T> {
+	setLeft: () => void
+	setRight: () => void
+	toggle: () => void
+	set: (value: T) => void
+}
+
+function useBoolean(initData: boolean = false): [boolean, Actions] {
+	const [value, setValue] = useState(initData);
+	const actions = {
+		setFalse: () => setValue(false),
+		setTrue: () => setValue(true),
+		toggle: () => setValue(!value),
+		set: val => setValue(_val),
+	};
+	return [value, actions];
+}
+```
+
+结合函数组件，上面的两个demo就可以换成这样的写法：
+
+#### function Demo
+
+::: code-group
+
+```js [Demo1]
+function Demo1(props) {
+	const [showModal, modalActions] = useBoolean();
+	return (
+		<>
+			<button onClick={modalActions.setTrue}></button>
+			<Modal visiable={showModal} closeModal={modalActions.setFalse}></Modal>
+		</>
+	);
+}
+
+```
+
+```js [Demo2]
+function Demo1(props) {
+	const [showText, textActions] = useBoolean();
+	return (
+		<>
+			<button onClick={textActions.toggle}></button>
+			<div>{showText ? 'show' : 'hide'}</div>
+		</>
+ 	);
+}
+
+```
+:::
+
+但是，很多时候我们对状态的判断并不是只是 boolean 类型，比如一个状态的可选值为 `off / on`, `A/B`, `xxx/nnn` 等
+
+所以我们可以把 useBoolean 在抽象一些
+
+#### useToggle
+
+```ts
+interface Actions<T> {
+	setLeft: () => void
+	setRight: () => void
+	toggle: () => void
+	set: (value: T) => void
+}
+function useToggle<T>(
+	leftValue: T = true, 
+	rightValue: T = false
+): [T, Actions<T>] {
+	const [value, setValue] = useState<T>(leftValue);
+
+	const actions = {
+		setLeft: () => setValue(initData),
+		setRight: () => setValue(rightValue),
+		toggle: () => setValue(value === leftValue ? rightValue : leftValue),
+		set: (value: T) => setValue(value)
+	};
+
+	return [value, actions]
+}
+```
+
+如上面的代码，那么我们使用的时候可以这么用
+
+```js
+const [show, actions] = useToggle('off', 'on') // show --> off / on
+const [open, { toggle }] = useToggle() // open --> boolean
+```
+
+但是这样还不够，无论是 useBoolean 还是 useToggle 都是针对两个状态之间的切换，那如果多个呢
+
+比如常见的 tab 标签栏，再比如股票查看分时图、日k图、月k图、季度图等切换的操作，实际上都是属于多状态之间的切换
+
+所以我们再把 useToggle 抽象一些，变成 useTogglePlus
+
+#### useTogglePlus
+
+```ts
+interface Actions {
+	setLeft: () => void
+	setRight: () => void
+	set: (index: number) => void
+}
+
+function useTogglePlus<T>(
+	initIndex: number, 
+	list: T[] =[]
+): [T, Actions] {
+	const [value, setValue] = useState<T>(list[initInde || 0] || '');
+	const [index, setIndex] = useState<T>(initIndex || 0);
+	
+	const getIndex = (type: boolean = true): number => {
+		const _leftIndex = index - 1 < 0 ? list.length - 1 : index - 1
+		const _rightIndex = index + 1 > list.length ? 0 : index + 1
+		const _index = type ? _rightIndex : _leftIndex
+		setIndex(_index)
+		return _index
+	}
+
+	const setLeft = () => {
+		const _index = getIndex(false)
+		setValue(list[_index]),
+	}
+
+	const setRight = () => {
+		const _index = getIndex(true)
+		setValue(list[_index]),
+	}
+
+	const set = (_index) => {
+		if (_index < 0 || _index > list.length - 1) {
+			throw new Error('对应下标的值不存在')
+		}
+		setValue(list[_index])
+	}
+
+	const actions = {
+		setLeft,
+		setRight,
+		set
+	};
+
+	return [value, actions]
+}
+```
+
+### 案例二：避免内存泄漏
+
+#### class Demo
+
+::: code-group
+
+```js [SetTimeOutDemo]
+let timer;
+class SetTimeOutDemo extends Componet {
+	componentDidMount() {
+		timer = setTimeout(() => {
+			// doSomething
+		}, 10 * 1000);
+	}
+
+	componentDidUpdate() {
+		if (timer) {
+			clearTimeout(timer);
+		}
+		timer = setTimeout(() => {
+			this.doSomthing();
+		}, 10 * 1000);
+	}	
+
+	componentWillUnmount() {
+		clearTimeout(timer);
+	}
+
+	doSomthing = () => {
+		// ...
+	};
+	// ...
+}
+```
+
+```js [EventListernDemo]
+class EventListernDemo extends Component {
+	constructor() {
+		super();
+		this.state = {
+			num: 0,
+		};
+	}
+
+	componentDidMount() {
+		this.dom.addEventListener('touchStart', this.doSomthing1);
+	}
+
+	componentDidUpdate() {
+		if (num > 10) {
+			this.dom.addEventListener('click', this.doSomthing2);
+		}
+	}
+
+	componentWillUnmount() {
+		this.dom.removeEventListener('touchStart', this.doSomthing1);
+		this.dom.removeEventListener('click', this.doSomthing2);
+	}
+
+	doSomthing1 = event => {
+		// ...
+	};
+
+	doSomthing2 = event => {
+		// ...
+	};
+	// ...
+}
+```
+
+:::
+
+上面的代码同样是两个组件
+- 组件一：组件挂载或更新的时候，更新定时器，组件卸载的时候清空定时器
+- 组件二：组件挂载时对指定节点开启 touchStart 监听，在 num 大于10时开启 click 监听，组件卸载的时候移除 touchStart 和 click 监听
+
+这两个组件的逻辑很简单，但是如果我们在写的时候忘记在组件卸载的时候移除监听，那么就`存在内存泄漏的风险`
+
+通用的，在类组件时代，如果我们想把添加监听和移除监听的操作抽离出来，也是比较困难的
+
+但是使用 hooks，我们还是能很简单的把上面的风险点给移除
+
+#### useSetTimeout + useEventListener
+
+::: code-group
+```ts [定时器 hook]
+function useSetTimeout(
+	fn: Function, 
+	delay: number = 1000, 
+	deps: any[] = []
+) {
+	useEffect(() => {
+		let timer = setTimeout(() => fn?.(), delay);
+		return () => clearTimeout(timer);
+	}, deps);
+}
+
+```
+
+```ts [事件监听 hook]
+function useEventListener(
+	dom: HTMLElemtent, 
+	eventName: string, 
+	callback: (e: Event) => void, 
+	deps: any[] = []
+) {
+	useEffect(() => {
+		dom?.addEventListener?.(eventName, callback);
+		return () => dom?.removeEventListener?.(eventName, callback);
+	}, deps);
+}
+
+```
+:::
+
+通过自定义 hooks 我们把定时器和事件监听事件都抽离出来了
+
+下面时把上面的两个类组件更换成函数组件 + 我们自定义的 hooks
+
+#### function Demo
+
+::: code-group
+```js [SetTimeOutDemo]
+function SetTimeOutDemo() {
+	useSetTimeout(doSomthing, 10 * 1000);
+
+	const doSomthing = () => {
+	// ...
+	};
+	// ...
+}
+
+```
+
+```js [EventListernDemo]
+function EventListernDemo() {
+	const [num, setNum] = useState(0);
+	useEventListener(dom, 'touchStart', doSomthing);
+	useEffect(() => {
+		if (num > 10) {
+			useEventListener(dom, 'click', doSomthing);
+		}
+	}, [num, dom]);
+	doSomthing1 = event => {
+	// ...
+	};
+	doSomthing2 = event => {
+	// ...
+	};
+	// ...
+}
+
+```
+:::
+
+通过这两个案例，应该能大致理解为什么要有 hooks 了吧，那后面就开始说下几个比较常用的官方 hooks 吧
+
+### 常用 hooks 分类 
 
 对于常用的 react hooks，我把他们分为 3 类:
 
@@ -31,10 +431,6 @@ flowchart LR
 ## 状态相关
 
 ### useState
-
-```js
-useState();
-```
 
 ```js{1,4,8-9}
 import { useState } from "react";
@@ -759,6 +1155,7 @@ export function useRequest_2(http, options) {
 				setError(null);
 				onSuccess?.(res);
 			} else {
+				clearCache();
 				runAsync();
 			}
 		} else {

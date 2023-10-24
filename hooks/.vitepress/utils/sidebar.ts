@@ -78,7 +78,7 @@ const getSidebarItem = (dirPath: string): DefaultTheme.SidebarItem[] => {
       {
         text: `🚲 ${getGroupName('easy')}`,
         items: easyMiddleHardMap.easy,
-        collapsed: true,
+        collapsed: false,
       },
       {
         text: `🛥️ ${getGroupName('other')}`,

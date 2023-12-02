@@ -1,12 +1,13 @@
 <!--
  * @Author: HfWang
  * @Date: 2023-05-31 19:04:18
- * @LastEditors: wanghaofeng 2860028714@qq.com
- * @LastEditTime: 2023-08-05 10:47:08
- * @FilePath: \code\whf-hooks-analysis\hooks\react-hooks.md
+ * @LastEditors: wanghaofeng
+ * @LastEditTime: 2023-12-02 09:34:42
+ * @FilePath: \whf-hooks-analysis\hooks\react-hooks.md
 -->
 
 # React Hooks 新手入坑指南
+
 
 ## 前言
 
@@ -203,6 +204,8 @@ const [open, { toggle }] = useToggle() // open --> boolean
 但是这样还不够，无论是 useBoolean 还是 useToggle 都是针对两个状态之间的切换，那如果多个呢
 
 比如常见的 tab 标签栏，再比如股票查看分时图、日k图、月k图、季度图等切换的操作，实际上都是属于多状态之间的切换
+
+![哔哩哔哩-状态栏切换](https://whf-img.oss-cn-hangzhou.aliyuncs.com/img/202311181311389.png)
 
 所以我们再把 useToggle 抽象一些，变成 useTogglePlus
 
@@ -613,7 +616,51 @@ flowchart TB
   end
 ```
 
-如果 useEffect 的依赖项数组中包含对象，React 会检查对象属性是否发生变化。如果属性的顺序、值或对象本身引用发生变化，则会触发 useEffect。
+如果 useEffect 的依赖项数组中包含对象，React 会检查对象属性是否发生变化。
+
+如果属性的顺序、值或对象本身引用发生变化，则会触发 useEffect。
+
+react 中的源码:
+
+```ts
+// shallowEqual.js
+import is from './objectIs' // 浅比较
+import hasOwnProperty from './hasOwnProperty'
+
+function shallowEqual(objA: mixed, objB: mixed): boolean {
+	// 先判断内存地址是否一致
+  if (is(objA, objB)) return true;
+	// 判断是否是对象
+  if (
+    typeof objA !== 'object' || objA === null ||
+    typeof objB !== 'object' || objB == null
+  ) {
+    return false
+  }
+
+	// 获取对应的 key
+  const keysA = Objects.keys(objA)
+  const keysB = Objects.keys(objB)
+
+	// 如果 key 的数量不一致，则直接返回 false
+  if (keysA.length !== keysB.length) {
+    return false
+  }
+
+	// key 数量一致对应的 key 进行浅比较
+  for (let i = 0; i < keysA.length; i++) {
+    const currentKey = keysA[i]
+    if (
+      !hasOwnProperty.call(objB, currenrtKey) ||
+      !is(objA[currentKey], objB[currentKey])
+    ) {
+      return false
+    }
+  }
+  return true
+}
+```
+
 
 #### effect 中 clear 函数的执行时机
 

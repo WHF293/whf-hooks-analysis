@@ -2,11 +2,12 @@
  * @Author: HfWang
  * @Date: 2023-05-31 19:04:18
  * @LastEditors: wanghaofeng
- * @LastEditTime: 2023-11-15 20:15:21
+ * @LastEditTime: 2023-12-02 09:34:42
  * @FilePath: \whf-hooks-analysis\hooks\react-hooks.md
 -->
 
 # React Hooks 新手入坑指南
+
 
 ## 前言
 
@@ -203,6 +204,8 @@ const [open, { toggle }] = useToggle() // open --> boolean
 但是这样还不够，无论是 useBoolean 还是 useToggle 都是针对两个状态之间的切换，那如果多个呢
 
 比如常见的 tab 标签栏，再比如股票查看分时图、日k图、月k图、季度图等切换的操作，实际上都是属于多状态之间的切换
+
+![哔哩哔哩-状态栏切换](https://whf-img.oss-cn-hangzhou.aliyuncs.com/img/202311181311389.png)
 
 所以我们再把 useToggle 抽象一些，变成 useTogglePlus
 
